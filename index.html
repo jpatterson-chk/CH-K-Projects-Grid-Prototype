@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <style>
+    /* ---------------------------------------------------------------------
+       Reset / base
+    --------------------------------------------------------------------- */
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: #fafafa;
+      color: #000;
+      font-family: "Arial", Arial,
+                   system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .page {
+      /* Generous horizontal padding so the grid never touches the edges. */
+      padding: 24px 24px;
+    }
+
+    /* ---------------------------------------------------------------------
+       Grid container
+       Column count and card width are FIXED per breakpoint (not auto-fit /
+       minmax). The grid fills the full content width; `space-between`
+       distributes the leftover horizontal space into the column gaps, so the
+       gutters grow and shrink with the viewport while card width stays fixed.
+       (Exception: the widescreen breakpoint sizes cards in vw — see below.)
+    --------------------------------------------------------------------- */
+    .module-archive {
+      /* Defaults = smallest breakpoint (<= 640px). Overridden below. */
+      --module-archive-cols: 2;
+      --archive-card-w: 130px;
+      --archive-card-gap: 48px;    /* row gap */
+
+      display: grid;
+      grid-template-columns: repeat(var(--module-archive-cols), var(--archive-card-w));
+      row-gap: var(--archive-card-gap);
+      column-gap: 0;               /* horizontal gutters come from space-between */
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    /* 641px – 1024px */
+    @media (min-width: 641px) {
+      .module-archive {
+        --module-archive-cols: 3;
+        --archive-card-w: 150px;
+        --archive-card-gap: 64px;
+      }
+      .page { padding: 56px 40px; }
+    }
+
+    /* 1025px – 1280px */
+    @media (min-width: 1025px) {
+      .module-archive {
+        --module-archive-cols: 4;
+        --archive-card-w: 130px;
+        --archive-card-gap: 96px;
+      }
+      .page { padding: 64px 48px; }
+    }
+
+    /* 1281px – 1440px */
+    @media (min-width: 1281px) {
+      .module-archive {
+        --module-archive-cols: 4;
+        --archive-card-w: 160px;
+        --archive-card-gap: 96px;
+      }
+      .page { padding: 72px 64px; }
+    }
+
+    /* 1441px – 1680px */
+    @media (min-width: 1441px) {
+      .module-archive {
+        --module-archive-cols: 5;
+        --archive-card-w: 9vw;
+        --archive-card-gap: 96px;
+      }
+      .page { padding: 24px 24px; }
+    }
+
+    /* > 1680px */
+    @media (min-width: 1681px) {
+      .module-archive {
+        --module-archive-cols: 5;
+        --archive-card-w: 9vw;      /* widescreen: scale cards up on very wide screens */
+        --archive-card-gap: 96px;
+      }
+      .page { padding: 24px 24px; }
+    }
+
+    /* ---------------------------------------------------------------------
+       Card — no border, background, shadow, or lift. Just image + title.
+    --------------------------------------------------------------------- */
+    .archive-card {
+      margin: 0;
+      display: block;
+    }
+
+    .archive-card__img {
+      display: block;
+      width: 100%;       /* fills --archive-card-w */
+      height: auto;      /* preserves natural aspect ratio */
+      transition: opacity 0.25s ease;
+    }
+
+    .archive-card:hover .archive-card__img {
+      opacity: 0.7;      /* the only hover effect */
+    }
+
+    .archive-card__title {
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: #000;    /* light grey, understated */
+    }
+
+    .archive-empty {
+      color: #9a9a9a;
+      font-size: 13px;
+      text-align: center;
+      padding: 64px 0;
+    }
+
+    /* ---------------------------------------------------------------------
+       Top navigation bar
+       Persistent wordmark on the left; a tagline that crossfades into the
+       studio facts when MENU is toggled. The right-hand control swaps
+       between MENU and a close (×) glyph. Pure CSS transitions, one class
+       toggle in JS.
+    --------------------------------------------------------------------- */
+    :root { --ck-muted: #808080; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #fafafa;
+      color: #000;
+      font-size: clamp(16px, 1.28vw, 24px);
+      line-height: 1.3;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+      /* Height is fixed to the closed bar (.nav__sizer) in normal flow. The
+         real bar (.nav__inner) is overlaid and free to grow downward over the
+         page, so opening the menu never shifts the content below it. */
+    }
+
+    /* Reserves the closed, single-line bar height in normal flow. */
+    .nav__sizer {
+      display: block;
+      padding: 14px 24px;
+      white-space: nowrap;
+      visibility: hidden;
+    }
+
+    /* The actual bar — overlays the sizer; grows over the page when open. */
+    .nav__inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: flex-start;   /* toggle pins to the top line */
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 24px;
+      background: #fafafa;
+    }
+
+    @media (min-width: 641px)  { .nav__sizer, .nav__inner { padding: 16px 24px; } }
+    @media (min-width: 1025px) { .nav__sizer, .nav__inner { padding: 18px 24px; } }
+    @media (min-width: 1281px) { .nav__sizer, .nav__inner { padding: 18px 24px; } }
+
+    /* Left group: brand + the crossfading suffix. Takes all width up to the
+       toggle so the suffix has room to wrap onto further lines. */
+    .nav__left {
+      display: flex;
+      align-items: baseline;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .nav__brand {
+      color: #000;
+      white-space: nowrap;   /* never break the wordmark */
+    }
+
+    /* The suffix fills the remaining width; its text wraps within it. The two
+       variants overlap (same top-left): whichever is shown sits in normal flow
+       and drives the bar height, the other is taken out of flow and faded. */
+    .nav__suffix {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-left: 0.45em;
+    }
+    .nav__suffix > span {
+      display: block;
+      transition: opacity 0.35s ease;
+    }
+
+    .nav__suffix-default  { color: var(--ck-muted); opacity: 1; }
+    .nav__suffix-expanded {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .nav.is-open .nav__suffix-default {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .nav.is-open .nav__suffix-expanded {
+      position: static;
+      opacity: 1;
+      pointer-events: auto;
+      transition-delay: 0.12s;   /* fade in just after the tagline fades out */
+    }
+
+    /* Muted (grey) tokens inside the expanded stats: connectors + numbers. */
+    .nav .m { color: var(--ck-muted); }
+
+    /* Right control: MENU <-> × , stacked in one cell, right-aligned. */
+    .nav__toggle {
+      flex: none;
+      display: inline-grid;
+      align-items: center;
+      justify-items: end;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: #000;
+      cursor: pointer;
+    }
+    .nav__toggle > * {
+      grid-area: 1 / 1;
+      transition: opacity 0.3s ease;
+    }
+    .nav__toggle-label { opacity: 1; }
+    .nav__toggle-close {
+      opacity: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+    .nav__toggle-close svg { display: block; }
+
+    .nav.is-open .nav__toggle-label { opacity: 0; }
+    .nav.is-open .nav__toggle-close { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav__suffix > span,
+      .nav__toggle > * { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" id="nav">
+    <span class="nav__sizer" aria-hidden="true">&nbsp;</span>
+    <div class="nav__inner">
+      <div class="nav__left">
+        <span class="nav__brand">CHYBIK <span class="m">+</span> KRISTOF</span><span class="nav__suffix">
+          <span class="nav__suffix-default">= ARCHITECTS &amp; URBAN DESIGNERS</span>
+          <span class="nav__suffix-expanded"><span class="m">+</span> <span class="m">74</span> ARCHITECTS <span class="m">+</span> <span class="m">153</span> CLIENTS <span class="m">+</span> <span class="m">20</span> COUNTRIES <span class="m">=</span> <span class="m">608</span> PROJECTS<span class="m">;</span> <span class="m">16</span> INSIGHTS<span class="m">;</span> <span class="m">22</span> UPDATES<span class="m">;</span> <span class="m">1</span> BOOK<span class="m">;</span> <span class="m">3</span> JOBS<span class="m">;</span> <span class="m">4</span> OFFICES<span class="m">.</span></span>
+        </span>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Toggle studio facts">
+        <span class="nav__toggle-label">MENU</span>
+        <span class="nav__toggle-close" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
+            <line x1="2" y1="2" x2="14" y2="14"></line>
+            <line x1="14" y1="2" x2="2" y2="14"></line>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="module-archive" id="archive" aria-label="Projects"></section>
+  </main>
+
+  <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
+  <script src="manifest.js"></script>
+  <script>
+    (function () {
+      var grid = document.getElementById("archive");
+      var images = window.PROJECT_IMAGES || [];
+
+      if (!images.length) {
+        grid.innerHTML =
+          '<p class="archive-empty">No images found. Add files to ./images/ ' +
+          'and run ./generate-manifest.sh</p>';
+        return;
+      }
+
+      // "riverside-pavilion.svg" -> "Riverside Pavilion"
+      function titleFromFilename(name) {
+        return name
+          .replace(/\.[^.]+$/, "")        // drop extension
+          .replace(/[-_]+/g, " ")          // dashes/underscores -> spaces
+          .replace(/\s+/g, " ")
+          .trim()
+          .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      }
+
+      var frag = document.createDocumentFragment();
+
+      images.forEach(function (file) {
+        var title = titleFromFilename(file);
+
+        var card = document.createElement("figure");
+        card.className = "archive-card";
+
+        var img = document.createElement("img");
+        img.className = "archive-card__img";
+        img.src = "images/" + file;
+        img.alt = title;
+
+        var caption = document.createElement("figcaption");
+        caption.className = "archive-card__title";
+        caption.textContent = title;
+
+        card.appendChild(img);
+        card.appendChild(caption);
+        frag.appendChild(card);
+      });
+
+      grid.appendChild(frag);
+    })();
+  </script>
+
+  <!-- Nav toggle: swap the tagline for the studio facts (and MENU for ×). -->
+  <script>
+    (function () {
+      var nav = document.getElementById("nav");
+      var toggle = document.getElementById("navToggle");
+      if (!nav || !toggle) return;
+
+      toggle.addEventListener("click", function () {
+        var open = nav.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute(
+          "aria-label",
+          open ? "Hide studio facts" : "Toggle studio facts"
+        );
+      });
+    })();
+  </script>
+</body>
+</html>
