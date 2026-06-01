@@ -12,7 +12,10 @@
     *::before,
     *::after { box-sizing: border-box; }
 
-    html { -webkit-text-size-adjust: 100%; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;   /* Back to Top eases to the nav, no JS */
+    }
 
     body {
       margin: 0;
@@ -206,7 +209,16 @@
        ignoring transition-delay — so JS drives the close: it adds .is-closing
        to fade the facts out, then on transitionend drops it, which hides the
        facts and restores the tagline in a SINGLE reflow. */
-    .nav__tagline { color: var(--ck-muted); }
+    .nav__tagline {
+      color: var(--ck-muted);
+      transition: opacity 0.3s ease;
+    }
+    /* The tagline fades in when it returns at the end of a close. JS adds this
+       class while the tagline is still hidden, drops .is-closing (so it
+       displays at opacity 0, no transition), forces a reflow, then removes this
+       class — letting opacity transition 0 -> 1. Scoping the fade to this class
+       (rather than @starting-style) keeps it from also firing on page load. */
+    .nav.tagline-enter .nav__tagline { opacity: 0; transition: none; }
     .nav__facts {
       display: none;
       opacity: 0;
@@ -370,10 +382,100 @@
 
     @media (prefers-reduced-motion: reduce) {
       .project-list__more { transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ---------------------------------------------------------------------
+       Footer
+       Columns sit on a reusable 12-column grid (.footer__grid) shared by the
+       main block and the bottom bar, so every element lines up on the same
+       column lines. Mobile-first: the base is a single-column stack; the
+       12-col template and all placements live in the >=641px block.
+    --------------------------------------------------------------------- */
+    .footer { background: #fafafa; padding: 64px 16px 40px; }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 40px;
+    }
+
+    .footer__bottom { margin-top: 56px; }
+
+    .footer__heading {
+      margin: 0 0 24px;
+      font-size: clamp(16px, 1.28vw, 24px);
+      font-weight: 400;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .footer__links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      row-gap: 16px;
+    }
+
+    /* All footer links: muted grey, ~16px, darken on hover. */
+    .footer a {
+      color: var(--ck-muted);
+      font-size: 16px;
+      text-decoration: none;
+      cursor: pointer;   /* placeholder links have no href yet */
+      transition: color 0.2s ease;
+    }
+    .footer a:hover { color: #000; }
+
+    .footer__copy {
+      margin: 0;
+      color: var(--ck-muted);
+      font-size: 16px;
+    }
+
+    .footer__top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.015em;
+    }
+
+    /* Desktop: the shared 12-column grid + element placements. */
+    @media (min-width: 641px) {
+      .footer { padding: 96px 40px 48px; }
+      .footer__grid {
+        grid-template-columns: repeat(12, 1fr);
+        column-gap: 24px;
+      }
+      .footer__brand         { grid-column: 1 / span 2; }
+      .footer__col--studio   { grid-column: 7 / span 2; }
+      .footer__col--projects { grid-column: 9 / span 2; }
+      .footer__col--contact  { grid-column: 11 / span 2; }
+      .footer__copy          { grid-column: 1 / span 3; }
+      .footer__privacy       { grid-column: 4 / span 2; }
+      .footer__top           { grid-column: 11 / span 2; align-items: baseline}
+    }
+    @media (min-width: 1025px) { .footer { padding: 120px 48px 56px; } }
+    @media (min-width: 1281px) { .footer { padding: 140px 24px 24px; } }
+
+    /* Mobile: two-column block with slightly smaller links. */
+    @media (max-width: 640px) {
+      .footer__main { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+      .footer__links { row-gap: 8px; }
+      .footer a,
+      .footer__copy { font-size: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .footer a { transition: none; }
     }
   </style>
 </head>
-<body>
+<body id="top">
   <header class="nav" id="nav">
     <div class="nav__sizer" aria-hidden="true">CHYBIK + KRISTOF</div>
     <div class="nav__bar">
@@ -405,6 +507,58 @@
       <button class="project-list__more" id="projectMore" type="button">View More +</button>
     </section>
   </main>
+
+  <footer class="footer">
+    <div class="footer__grid footer__main">
+      <div class="footer__brand">
+        <h2 class="footer__heading">CHYBIK + KRISTOF</h2>
+        <ul class="footer__links">
+          <li><a>Instagram</a></li>
+          <li><a>Facebook</a></li>
+          <li><a>Youtube</a></li>
+          <li><a>LinkedIn</a></li>
+        </ul>
+      </div>
+
+      <nav class="footer__col footer__col--studio" aria-label="Studio">
+        <h3 class="footer__heading">Studio</h3>
+        <ul class="footer__links">
+          <li><a>Team</a></li>
+          <li><a>Awards</a></li>
+          <li><a>Exhibitions</a></li>
+          <li><a>Lectures</a></li>
+          <li><a>Careers</a></li>
+          <li><a>Contact</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer__col footer__col--projects" aria-label="Projects">
+        <h3 class="footer__heading">Projects</h3>
+        <ul class="footer__links">
+          <li><a>All Projects</a></li>
+          <li><a>Master-planning</a></li>
+          <li><a>Sports &amp; Culture</a></li>
+          <li><a>Educational</a></li>
+          <li><a>Public Space</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer__col footer__col--contact" aria-label="Contact">
+        <h3 class="footer__heading">Contact</h3>
+        <ul class="footer__links">
+          <li><a href="mailto:office@chybik-kristof.com">office@chybik-kristof.com</a></li>
+          <li><a href="tel:+420775727488">+420 775 727 488</a></li>
+          <li><a>Office Locations</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__grid footer__bottom">
+      <p class="footer__copy">© 2026 CHYBIK + KRISTOF</p>
+      <a class="footer__privacy">Privacy Policy</a>
+      <a class="footer__top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
 
   <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
   <script src="manifest.js"></script>
@@ -518,6 +672,7 @@
       if (!nav || !toggle) return;
 
       var facts = nav.querySelector(".nav__facts");
+      var tagline = nav.querySelector(".nav__tagline");
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
       var closeTimer;
 
@@ -529,11 +684,15 @@
         );
       }
 
-      // Hide the faded-out facts and restore the tagline in ONE reflow, so they
-      // never share the line.
+      // Hide the faded-out facts and restore the tagline in ONE reflow (so they
+      // never share the line), then fade the tagline in: start it at opacity 0
+      // with no transition, commit that with a forced reflow, then release it.
       function finishClose() {
         clearTimeout(closeTimer);
-        nav.classList.remove("is-closing");
+        nav.classList.add("tagline-enter");     // opacity 0, transition off
+        nav.classList.remove("is-closing");     // tagline now displays, still at 0
+        void tagline.offsetWidth;               // commit the 0 before transitioning
+        nav.classList.remove("tagline-enter");  // fade 0 -> 1
       }
 
       function open() {
