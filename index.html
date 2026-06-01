@@ -25,8 +25,7 @@
     }
 
     .page {
-      /* Generous horizontal padding so the grid never touches the edges. */
-      padding: 24px 24px;
+      padding: 16px;
     }
 
     /* ---------------------------------------------------------------------
@@ -40,13 +39,13 @@
     .module-archive {
       /* Defaults = smallest breakpoint (<= 640px). Overridden below. */
       --module-archive-cols: 2;
-      --archive-card-w: 192px;
+      --archive-card-w: 155px;
       --archive-card-gap: 96px;    /* row gap */
 
       display: grid;
       grid-template-columns: repeat(var(--module-archive-cols), var(--archive-card-w));
       row-gap: var(--archive-card-gap);
-      column-gap: 0;               /* horizontal gutters come from space-between */
+      column-gap: 16px;            /* minimum gap; space-between adds more on wider viewports */
       justify-content: space-between;
       align-items: start;
     }
@@ -138,10 +137,11 @@
 
     /* ---------------------------------------------------------------------
        Top navigation bar
-       Persistent wordmark on the left; a tagline that crossfades into the
-       studio facts when MENU is toggled. The right-hand control swaps
-       between MENU and a close (×) glyph. Pure CSS transitions, one class
-       toggle in JS.
+       The wordmark and its suffix are ALWAYS a single run of inline text, so
+       wrapped lines naturally align to the left edge. Toggling MENU just swaps
+       which suffix shows (the "= ARCHITECTS" tagline vs. the studio facts) —
+       a one-line display swap, with no change of layout mode. The right-hand
+       control swaps MENU <-> × via the same stacked-cell technique.
     --------------------------------------------------------------------- */
     :root { --ck-muted: #808080; }
 
@@ -155,92 +155,84 @@
       line-height: 1.3;
       letter-spacing: 0.015em;
       text-transform: uppercase;
-      /* Height is fixed to the closed bar (.nav__sizer) in normal flow. The
-         real bar (.nav__inner) is overlaid and free to grow downward over the
-         page, so opening the menu never shifts the content below it. */
     }
 
-    /* Reserves the closed, single-line bar height in normal flow. */
+    /* Reserves the closed, single-line bar height in normal flow. The real bar
+       (.nav__bar) overlays it and is free to grow downward over the page, so
+       opening the menu never shifts the content below it. */
     .nav__sizer {
-      display: block;
-      padding: 14px 24px;
+      margin: 0;
+      padding: 16px;
       white-space: nowrap;
       visibility: hidden;
     }
 
-    /* The actual bar — overlays the sizer; grows over the page when open. */
-    .nav__inner {
+    .nav__bar {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      inset: 0 0 auto 0;
       display: flex;
       align-items: flex-start;   /* toggle pins to the top line */
       justify-content: space-between;
       gap: 24px;
-      padding: 14px 24px;
-      background: #fafafa;
+      padding: 16px;
+      /* The closed strip is already covered by .nav's solid background, so the
+         bar's own fill only matters for the expanded region. Fade it in/out
+         with the facts (same 0.3s ease) so the panel and text feel like one
+         transition. Transparent-white (not `transparent`) keeps it a pure
+         alpha ramp — no grey midpoint. */
+      background-color: rgba(250, 250, 250, 0);
+      transition: background-color 0.3s ease;
     }
 
-    @media (min-width: 641px)  { .nav__sizer, .nav__inner { padding: 16px 24px; } }
-    @media (min-width: 1025px) { .nav__sizer, .nav__inner { padding: 18px 24px; } }
-    @media (min-width: 1281px) { .nav__sizer, .nav__inner { padding: 18px 24px; } }
+    @media (min-width: 641px)  { .nav__sizer, .nav__bar { padding: 16px 24px; } }
+    @media (min-width: 1025px) { .nav__sizer, .nav__bar { padding: 18px 24px; } }
 
-    /* Left group: brand + the crossfading suffix. Takes all width up to the
-       toggle so the suffix has room to wrap onto further lines. */
-    .nav__left {
-      display: flex;
-      align-items: baseline;
+    /* The wordmark + suffix live in one paragraph of inline text and take all
+       width up to the toggle, so the facts can wrap onto further lines. */
+    .nav__text {
+      margin: 0;
       flex: 1 1 auto;
       min-width: 0;
     }
 
-    .nav__brand {
-      color: #000;
-      white-space: nowrap;   /* never break the wordmark */
-    }
+    .nav__brand   { color: #000; white-space: nowrap; }  /* never break the wordmark */
+    .nav .m       { color: var(--ck-muted); }            /* grey connectors + numbers */
 
-    /* The suffix fills the remaining width; its text wraps within it. The two
-       variants overlap (same top-left): whichever is shown sits in normal flow
-       and drives the bar height, the other is taken out of flow and faded. */
-    .nav__suffix {
-      position: relative;
-      flex: 1 1 auto;
-      min-width: 0;
-      margin-left: 0.45em;
-    }
-    .nav__suffix > span {
-      display: block;
-      transition: opacity 0.35s ease;
-    }
-
-    .nav__suffix-default  { color: var(--ck-muted); opacity: 1; }
-    .nav__suffix-expanded {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+    /* The tagline (closed) and facts (open) share the suffix slot. The facts
+       fade via opacity; the tagline just swaps in/out. The catch is ordering
+       on CLOSE: the facts must leave the flow BEFORE the tagline re-enters it,
+       or both occupy the line and force an extra wrap. CSS can't sequence this
+       — a discrete `display` flip to a visible value takes effect immediately,
+       ignoring transition-delay — so JS drives the close: it adds .is-closing
+       to fade the facts out, then on transitionend drops it, which hides the
+       facts and restores the tagline in a SINGLE reflow. */
+    .nav__tagline { color: var(--ck-muted); }
+    .nav__facts {
+      display: none;
       opacity: 0;
-      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
-    .nav.is-open .nav__suffix-default {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .nav.is-open .nav__suffix-expanded {
-      position: static;
-      opacity: 1;
-      pointer-events: auto;
-      transition-delay: 0.12s;   /* fade in just after the tagline fades out */
+    /* Mobile: "= ARCHITECTS" is too long for the closed bar — drop it. */
+    @media (max-width: 640px) { .nav__tagline { display: none; } }
+
+    /* Open and closing both keep the facts in the slot and the tagline out. */
+    .nav.is-open .nav__tagline,
+    .nav.is-closing .nav__tagline { display: none; }
+    .nav.is-open .nav__facts,
+    .nav.is-closing .nav__facts   { display: inline; }
+
+    /* Facts are opaque only while fully open; .is-closing lets opacity fall
+       back to its 0 base, fading them out. @starting-style supplies the 0 ->
+       1 start when opening. */
+    .nav.is-open .nav__facts { opacity: 1; }
+    @starting-style {
+      .nav.is-open .nav__facts { opacity: 0; }
     }
 
-    /* Muted (grey) tokens inside the expanded stats: connectors + numbers. */
-    .nav .m { color: var(--ck-muted); }
+    /* Panel fill fades in lockstep: solid only when open, reverting to its
+       transparent base while closing. */
+    .nav.is-open .nav__bar { background-color: #fafafa; }
 
     /* Right control: MENU <-> × , stacked in one cell, right-aligned. */
     .nav__toggle {
@@ -274,21 +266,118 @@
     .nav.is-open .nav__toggle-close { opacity: 1; }
 
     @media (prefers-reduced-motion: reduce) {
-      .nav__suffix > span,
+      .nav__bar,
+      .nav__tagline,
+      .nav__facts,
       .nav__toggle > * { transition: none; }
+    }
+
+    /* ---------------------------------------------------------------------
+       Project list
+       A table-style listing with progressive disclosure. The header (title +
+       column labels) and every row share one column template (--project-cols)
+       so the labels sit directly over their data columns. On narrow screens
+       the grid collapses and each row flows as a single comma-separated line.
+    --------------------------------------------------------------------- */
+    .project-list {
+      --project-cols: minmax(0, 2.2fr) 1fr 1fr 1fr 0.8fr;
+      margin-top: 96px;
+    }
+
+    /* Title + the 4 column labels on one baseline-aligned row. */
+    .project-list__head {
+      display: grid;
+      grid-template-columns: var(--project-cols);
+      column-gap: 24px;
+      align-items: baseline;
+      padding-bottom: 48px;
+    }
+
+    .project-list__title {
+      margin: 0;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1;
+      color: #000;
+    }
+
+    /* display:contents lets the 4 label spans land in grid columns 2-5. */
+    .project-list__labels { display: contents; }
+    .project-list__labels > span {
+      color: var(--ck-muted);
+      font-size: clamp(16px, 1.28vw, 24px);
+      letter-spacing: 0.015em;
+    }
+
+    /* One row = the shared grid. No border, background, or shadow. */
+    .project-row {
+      display: grid;
+      grid-template-columns: var(--project-cols);
+      column-gap: 24px;
+      padding: 4px 0;
+      font-size: clamp(16px, 1.28vw, 24px);
+      letter-spacing: 0.015em;
+      color: #000;
+    }
+
+    .project-row__num {
+      margin-right: 0.5em;
+      color: var(--ck-muted);
+    }
+
+    /* The `.project-row` display rules above override the UA's
+       `[hidden] { display: none }`, so re-assert it for JS-hidden rows. */
+    .project-row[hidden] { display: none; }
+
+    /* Teaser: the last visible row fades while more rows remain hidden. */
+    .project-row.is-fade { opacity: 0.35; }
+
+    /* Minimal text button, centered below the rows. */
+    .project-list__more {
+      display: block;
+      margin: 32px auto 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      color: var(--ck-muted);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .project-list__more:hover { color: #000; }
+    .project-list__more[hidden] { display: none; }
+
+    /* Mobile: collapse each row to a single flowing line of text:
+       "### Project Name, City, CZ, category, status, 2026." */
+    @media (max-width: 640px) {
+      .project-list { margin-top: 64px; }
+      .project-list__labels { display: none; }
+
+      .project-row {
+        display: block;
+        padding: 8px 0;
+        line-height: 1.4;
+      }
+      .project-row__cell,
+      .project-row__num,
+      .project-row__name { display: inline; }
+
+      /* Separators between the inline cells (desktop grid shows none). */
+      .project-row__name::after { content: ", "; }
+      .project-row__cell + .project-row__cell::after { content: ", "; }
+      .project-row__cell:last-child::after { content: "."; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .project-list__more { transition: none; }
     }
   </style>
 </head>
 <body>
   <header class="nav" id="nav">
-    <span class="nav__sizer" aria-hidden="true">&nbsp;</span>
-    <div class="nav__inner">
-      <div class="nav__left">
-        <span class="nav__brand">CHYBIK <span class="m">+</span> KRISTOF</span><span class="nav__suffix">
-          <span class="nav__suffix-default">= ARCHITECTS &amp; URBAN DESIGNERS</span>
-          <span class="nav__suffix-expanded"><span class="m">+</span> <span class="m">74</span> ARCHITECTS <span class="m">+</span> <span class="m">153</span> CLIENTS <span class="m">+</span> <span class="m">20</span> COUNTRIES <span class="m">=</span> <span class="m">608</span> PROJECTS<span class="m">;</span> <span class="m">16</span> INSIGHTS<span class="m">;</span> <span class="m">22</span> UPDATES<span class="m">;</span> <span class="m">1</span> BOOK<span class="m">;</span> <span class="m">3</span> JOBS<span class="m">;</span> <span class="m">4</span> OFFICES<span class="m">.</span></span>
-        </span>
-      </div>
+    <div class="nav__sizer" aria-hidden="true">CHYBIK + KRISTOF</div>
+    <div class="nav__bar">
+      <p class="nav__text"><span class="nav__brand">CHYBIK <span class="m">+</span> KRISTOF</span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;ARCHITECTS <span class="m">+</span> <span class="m">153</span>&nbsp;CLIENTS <span class="m">+</span> <span class="m">20</span>&nbsp;COUNTRIES <span class="m">=</span> <span class="m">608</span>&nbsp;PROJECTS<span class="m">;</span> <span class="m">16</span>&nbsp;INSIGHTS<span class="m">;</span> <span class="m">22</span>&nbsp;UPDATES<span class="m">;</span> <span class="m">1</span>&nbsp;BOOK<span class="m">;</span> <span class="m">3</span>&nbsp;JOBS<span class="m">;</span> <span class="m">4</span>&nbsp;OFFICES<span class="m">.</span></span></p>
 
       <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Toggle studio facts">
         <span class="nav__toggle-label">MENU</span>
@@ -304,6 +393,17 @@
 
   <main class="page">
     <section class="module-archive" id="archive" aria-label="Projects"></section>
+
+    <section class="project-list" aria-label="Project list">
+      <header class="project-list__head">
+        <h2 class="project-list__title">Projects</h2>
+        <div class="project-list__labels" aria-hidden="true">
+          <span>City</span><span>Category</span><span>Status</span><span>Year</span>
+        </div>
+      </header>
+      <div class="project-list__rows" id="projectRows"></div>
+      <button class="project-list__more" id="projectMore" type="button">View More +</button>
+    </section>
   </main>
 
   <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
@@ -320,7 +420,7 @@
         return;
       }
 
-      // "riverside-pavilion.svg" -> "Riverside Pavilion"
+      // reformat caption text
       function titleFromFilename(name) {
         return name
           .replace(/\.[^.]+$/, "")        // drop extension
@@ -356,20 +456,114 @@
     })();
   </script>
 
-  <!-- Nav toggle: swap the tagline for the studio facts (and MENU for ×). -->
+  <!-- Project list: build all placeholder rows up front, then reveal them 10
+       at a time. The last visible row fades as a teaser while more remain. -->
+  <script>
+    (function () {
+      var rowsEl = document.getElementById("projectRows");
+      var moreBtn = document.getElementById("projectMore");
+      if (!rowsEl || !moreBtn) return;
+
+      var TOTAL = 30, STEP = 10, shown = 0;
+
+      // Idempotent: if the script re-runs (e.g. live-preview hot reload), start
+      // from an empty container so we never end up with duplicate rows and a
+      // stranded faded row from a previous pass.
+      rowsEl.innerHTML = "";
+
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < TOTAL; i++) {
+        var row = document.createElement("div");
+        row.className = "project-row";
+        row.hidden = true;
+        row.innerHTML =
+          '<span class="project-row__cell"><span class="project-row__num">###</span>' +
+          '<span class="project-row__name">Project Name</span></span>' +
+          '<span class="project-row__cell">City, CZ</span>' +
+          '<span class="project-row__cell">category</span>' +
+          '<span class="project-row__cell">status</span>' +
+          '<span class="project-row__cell">2026</span>';
+        frag.appendChild(row);
+      }
+      rowsEl.appendChild(frag);
+      var allRows = rowsEl.querySelectorAll(".project-row");
+
+      function render() {
+        allRows.forEach(function (r, idx) {
+          r.hidden = idx >= shown;
+          r.classList.remove("is-fade");
+        });
+        var moreRemain = shown < TOTAL;
+        moreBtn.hidden = !moreRemain;
+        if (moreRemain && shown > 0) allRows[shown - 1].classList.add("is-fade");
+      }
+
+      moreBtn.addEventListener("click", function () {
+        shown = Math.min(shown + STEP, TOTAL);
+        render();
+      });
+
+      shown = STEP;
+      render();
+    })();
+  </script>
+
+  <!-- Nav toggle: swap the tagline for the studio facts (and MENU for x).
+       Opening is a plain class toggle; closing is sequenced so the facts leave
+       the flow before the tagline returns (see the .is-closing CSS above). -->
   <script>
     (function () {
       var nav = document.getElementById("nav");
       var toggle = document.getElementById("navToggle");
       if (!nav || !toggle) return;
 
-      toggle.addEventListener("click", function () {
-        var open = nav.classList.toggle("is-open");
+      var facts = nav.querySelector(".nav__facts");
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var closeTimer;
+
+      function setAria(open) {
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         toggle.setAttribute(
           "aria-label",
           open ? "Hide studio facts" : "Toggle studio facts"
         );
+      }
+
+      // Hide the faded-out facts and restore the tagline in ONE reflow, so they
+      // never share the line.
+      function finishClose() {
+        clearTimeout(closeTimer);
+        nav.classList.remove("is-closing");
+      }
+
+      function open() {
+        clearTimeout(closeTimer);
+        nav.classList.remove("is-closing");
+        nav.classList.add("is-open");
+        setAria(true);
+      }
+
+      function close() {
+        nav.classList.remove("is-open");
+        setAria(false);
+        if (reduce.matches) return;       // no fade: base styles close instantly
+        nav.classList.add("is-closing");  // fade facts out, then finishClose()
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(finishClose, 400);  // fallback if transitionend is missed
+      }
+
+      toggle.addEventListener("click", function () {
+        if (nav.classList.contains("is-open")) close();
+        else open();
+      });
+
+      // The facts' opacity fade IS the close animation; end it when that fade
+      // finishes. Guarded so a re-open mid-close (is-closing already gone) is a
+      // no-op.
+      facts.addEventListener("transitionend", function (e) {
+        if (e.propertyName === "opacity" && nav.classList.contains("is-closing")) {
+          finishClose();
+        }
       });
     })();
   </script>
