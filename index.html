@@ -124,7 +124,7 @@
 
     .archive-card__title {
       margin-top: 8px;
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.35;
       font-weight: 400;
       letter-spacing: 0.01em;
@@ -152,7 +152,11 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      background: #fafafa;
+      /* Transparent positioning wrapper only. The glass (blur + tint) lives on
+         .nav__bar instead: a backdrop-filter here would make .nav a "backdrop
+         root", which silently disables .nav__bar's own backdrop-filter (a
+         nested backdrop-filter can't see past an ancestor that has one). */
+      background-color: transparent;
       color: #000;
       font-size: clamp(16px, 1.28vw, 24px);
       line-height: 1.3;
@@ -178,17 +182,24 @@
       justify-content: space-between;
       gap: 24px;
       padding: 16px;
-      /* The closed strip is already covered by .nav's solid background, so the
-         bar's own fill only matters for the expanded region. Fade it in/out
-         with the facts (same 0.3s ease) so the panel and text feel like one
-         transition. Transparent-white (not `transparent`) keeps it a pure
-         alpha ramp — no grey midpoint. */
-      background-color: rgba(250, 250, 250, 0);
-      transition: background-color 0.3s ease;
+      /* The single glass surface for both states. .nav__bar covers the closed
+         strip (inset top) and grows down into the open panel, so one blur +
+         tint here frosts everything with no nested-backdrop-filter problem.
+         0.85 alpha lets the page show through, blurred. */
+      background-color: rgba(250, 250, 250, 0.85);
+      -webkit-backdrop-filter: blur(1rem);
+      backdrop-filter: blur(1rem);
+      /* Height is driven by JS on close: it locks the expanded height, then
+         transitions down to the closed one-line height (.nav__sizer measures
+         it), then releases back to auto. overflow:hidden clips the wrapped
+         facts as the panel rolls up. */
+      overflow: hidden;
+      transition: background-color 0.3s ease,
+                  height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    @media (min-width: 641px)  { .nav__sizer, .nav__bar { padding: 16px 24px; } }
-    @media (min-width: 1025px) { .nav__sizer, .nav__bar { padding: 18px 24px; } }
+    @media (min-width: 641px)  { .nav__sizer, .nav__bar { padding: 12px 24px 8px ; } }
+    @media (min-width: 1025px) { .nav__sizer, .nav__bar { padding: 12px 24px 8px; } }
 
     /* The wordmark + suffix live in one paragraph of inline text and take all
        width up to the toggle, so the facts can wrap onto further lines. */
@@ -242,9 +253,6 @@
       .nav.is-open .nav__facts { opacity: 0; }
     }
 
-    /* Panel fill fades in lockstep: solid only when open, reverting to its
-       transparent base while closing. */
-    .nav.is-open .nav__bar { background-color: #fafafa; }
 
     /* Right control: MENU <-> × , stacked in one cell, right-aligned. */
     .nav__toggle {
@@ -673,6 +681,8 @@
 
       var facts = nav.querySelector(".nav__facts");
       var tagline = nav.querySelector(".nav__tagline");
+      var bar = nav.querySelector(".nav__bar");
+      var sizer = nav.querySelector(".nav__sizer");
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
       var closeTimer;
 
@@ -691,6 +701,7 @@
         clearTimeout(closeTimer);
         nav.classList.add("tagline-enter");     // opacity 0, transition off
         nav.classList.remove("is-closing");     // tagline now displays, still at 0
+        bar.style.height = "";                  // release to auto (now == closed height)
         void tagline.offsetWidth;               // commit the 0 before transitioning
         nav.classList.remove("tagline-enter");  // fade 0 -> 1
       }
@@ -699,16 +710,28 @@
         clearTimeout(closeTimer);
         nav.classList.remove("is-closing");
         nav.classList.add("is-open");
+        // Drop any height lock a mid-close left behind so the bar grows back to
+        // its full auto height. (Open itself isn't height-animated — the facts
+        // just fade in over the expanded panel.)
+        bar.style.height = "";
         setAria(true);
       }
 
       function close() {
-        nav.classList.remove("is-open");
         setAria(false);
-        if (reduce.matches) return;       // no fade: base styles close instantly
-        nav.classList.add("is-closing");  // fade facts out, then finishClose()
+        if (reduce.matches) {             // no animation: collapse instantly
+          nav.classList.remove("is-open");
+          return;
+        }
+        // Roll the panel up: lock the current expanded height, then transition
+        // it down to the closed one-line height while the facts fade out.
+        bar.style.height = bar.offsetHeight + "px";   // lock the start height
+        nav.classList.remove("is-open");
+        nav.classList.add("is-closing");              // fade facts out, then finishClose()
+        void bar.offsetWidth;                          // commit the start before changing it
+        bar.style.height = sizer.offsetHeight + "px"; // animate down to closed height
         clearTimeout(closeTimer);
-        closeTimer = setTimeout(finishClose, 400);  // fallback if transitionend is missed
+        closeTimer = setTimeout(finishClose, 400);    // fallback if transitionend is missed
       }
 
       toggle.addEventListener("click", function () {
