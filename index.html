@@ -186,7 +186,7 @@
          strip (inset top) and grows down into the open panel, so one blur +
          tint here frosts everything with no nested-backdrop-filter problem.
          0.85 alpha lets the page show through, blurred. */
-      background-color: rgba(250, 250, 250, 0.85);
+      background-color: rgba(250, 250, 250, 0.9);
       -webkit-backdrop-filter: blur(1rem);
       backdrop-filter: blur(1rem);
       /* Height is driven by JS on close: it locks the expanded height, then
@@ -329,6 +329,12 @@
       letter-spacing: 0.015em;
     }
 
+    /* Unrolls on reveal: JS animates its height between batches. */
+    .project-list__rows {
+      overflow: hidden;
+      transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
     /* One row = the shared grid. No border, background, or shadow. */
     .project-row {
       display: grid;
@@ -390,6 +396,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .project-list__more { transition: none; }
+      .project-list__rows { transition: none; }
       html { scroll-behavior: auto; }
     }
 
@@ -446,9 +453,9 @@
 
     .footer__top {
       display: inline-flex;
-      align-items: center;
+      align-items: baseline;
       gap: 8px;
-      text-transform: uppercase;
+      text-decoration: underline;
       letter-spacing: 0.015em;
     }
 
@@ -472,10 +479,24 @@
 
     /* Mobile: two-column block with slightly smaller links. */
     @media (max-width: 640px) {
+      .footer { padding: 64px 16px 16px;}
       .footer__main { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+      .footer__grid { row-gap: 32px; }
       .footer__links { row-gap: 8px; }
       .footer a,
-      .footer__copy { font-size: 14px; }
+      .footer__copy { font-size: 12px; }
+      /* Headings match the list-item size and sit tighter to their links. */
+      .footer__heading { font-size: 14px; margin-bottom: 8px; }
+      /* Bottom bar: privacy | back-to-top on one row, copyright below. */
+      .footer__bottom {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 24px;
+        row-gap: 24px;
+        font-size: 12px;
+      }
+      .footer__privacy { grid-column: 1; grid-row: 1; }
+      .footer__top     { grid-column: 2; grid-row: 1; }
+      .footer__copy    { grid-column: 1 / -1; grid-row: 2; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -562,9 +583,9 @@
     </div>
 
     <div class="footer__grid footer__bottom">
-      <p class="footer__copy">© 2026 CHYBIK + KRISTOF</p>
+      <p class="footer__copy">© CHYBIK + KRISTOF 2026</p>
       <a class="footer__privacy">Privacy Policy</a>
-      <a class="footer__top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
+      <a class="footer__top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
     </div>
   </footer>
 
@@ -627,6 +648,7 @@
       if (!rowsEl || !moreBtn) return;
 
       var TOTAL = 30, STEP = 10, shown = 0;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
       // Idempotent: if the script re-runs (e.g. live-preview hot reload), start
       // from an empty container so we never end up with duplicate rows and a
@@ -662,7 +684,27 @@
 
       moreBtn.addEventListener("click", function () {
         shown = Math.min(shown + STEP, TOTAL);
-        render();
+
+        if (reduce.matches) {           // no animation: reveal instantly
+          render();
+          return;
+        }
+
+        // FLIP the container height so the section visibly unrolls. Clear any
+        // in-flight lock first so the before/after heights are the natural ones.
+        rowsEl.style.height = "";
+        var startH = rowsEl.offsetHeight;   // height with the current rows
+        render();                            // reveal the next batch
+        var endH = rowsEl.offsetHeight;     // height with the new rows
+        rowsEl.style.height = startH + "px";
+        void rowsEl.offsetWidth;            // commit the start before changing it
+        rowsEl.style.height = endH + "px";  // transition up to the taller height
+      });
+
+      // Release the lock back to auto once the unroll settles, so the container
+      // stays responsive to reflow (e.g. viewport resize).
+      rowsEl.addEventListener("transitionend", function (e) {
+        if (e.propertyName === "height") rowsEl.style.height = "";
       });
 
       shown = STEP;
