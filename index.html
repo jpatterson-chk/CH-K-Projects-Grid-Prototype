@@ -97,7 +97,7 @@
     @media (min-width: 1681px) {
       .module-archive {
         --module-archive-cols: 5;
-        --archive-card-w: 12vw;      /* widescreen: scale cards up on very wide screens */
+        --archive-card-w: 12vw;      /* scale cards with the viewport on very wide screens */
         --archive-card-gap: 96px;
       }
       .page { padding: 24px 24px; }
@@ -113,8 +113,8 @@
 
     .archive-card__img {
       display: block;
-      width: 100%;       /* fills --archive-card-w */
-      height: auto;      /* preserves natural aspect ratio */
+      width: 100%;       /* sizes to --archive-card-w; height stays proportional */
+      height: auto;
       transition: opacity 0.25s ease;
     }
 
@@ -128,7 +128,7 @@
       line-height: 1.35;
       font-weight: 400;
       letter-spacing: 0.01em;
-      color: #000;    /* light grey, understated */
+      color: #000;
     }
 
     .archive-empty {
@@ -435,7 +435,6 @@
       row-gap: 16px;
     }
 
-    /* All footer links: muted grey, ~16px, darken on hover. */
     .footer a {
       color: var(--ck-muted);
       font-size: 16px;
@@ -603,7 +602,7 @@
         return;
       }
 
-      // reformat caption text
+      // Derive a display title from the image filename.
       function titleFromFilename(name) {
         return name
           .replace(/\.[^.]+$/, "")        // drop extension
