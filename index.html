@@ -115,11 +115,10 @@
       display: block;
       width: 100%;       /* sizes to --archive-card-w; height stays proportional */
       height: auto;
-      transition: opacity 0.25s ease;
     }
 
-    .archive-card:hover .archive-card__img {
-      opacity: 0.7;      /* the only hover effect */
+    .archive-card:hover .archive-card__title {
+      color: var(--ck-muted);
     }
 
     .archive-card__title {
@@ -129,6 +128,11 @@
       font-weight: 400;
       letter-spacing: 0.01em;
       color: #000;
+      transition: color 0.2s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .archive-card__title { transition: none; }
     }
 
     .archive-empty {
@@ -212,6 +216,16 @@
     .nav__brand   { color: #000; white-space: nowrap; }  /* never break the wordmark */
     .nav .m       { color: var(--ck-muted); }            /* grey connectors + numbers */
 
+    /* Each meaningful word is a placeholder link (no href yet, like the footer
+       links): inherits the surrounding colour, fades to muted on hover. */
+    .nav__link {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .nav__link:hover { color: var(--ck-muted); }
+
     /* The tagline (closed) and facts (open) share the suffix slot. The facts
        fade via opacity; the tagline just swaps in/out. The catch is ordering
        on CLOSE: the facts must leave the flow BEFORE the tagline re-enters it,
@@ -269,7 +283,9 @@
       text-transform: inherit;
       color: #000;
       cursor: pointer;
+      transition: color 0.2s ease;
     }
+    .nav__toggle:hover { color: var(--ck-muted); }
     .nav__toggle > * {
       grid-area: 1 / 1;
       transition: opacity 0.3s ease;
@@ -289,6 +305,8 @@
       .nav__bar,
       .nav__tagline,
       .nav__facts,
+      .nav__link,
+      .nav__toggle,
       .nav__toggle > * { transition: none; }
     }
 
@@ -501,13 +519,86 @@
     @media (prefers-reduced-motion: reduce) {
       .footer a { transition: none; }
     }
+
+    /* ---------------------------------------------------------------------
+       Jump-to-section control
+       A pure-HTML <details> menu pinned to the bottom-left, mirroring the nav:
+       same type, padding, and glass surface, with square corners. The list
+       drops UP (bottom: 100%) because the control sits at the foot of the
+       viewport. As with the nav, the glass lives on the inner surfaces
+       (summary + list), not the .jump wrapper — a backdrop-filter on the
+       wrapper would disable the nested ones. The anchors do the jumping;
+       smooth scroll is already set on <html>.
+    --------------------------------------------------------------------- */
+    .jump {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 30;          /* above the sticky nav and page content */
+      margin: 16px;         /* left margin = nav left padding, so left edges line up */
+      font-size: clamp(16px, 1.28vw, 24px);
+      line-height: 1.3;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .jump__button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;        /* = nav padding */
+      background-color: rgba(240, 240, 240, 0.9);
+      -webkit-backdrop-filter: blur(1rem);
+      backdrop-filter: blur(1rem);
+      cursor: pointer;
+      white-space: nowrap;
+      list-style: none;     /* drop the default disclosure triangle */
+    }
+    .jump__button::-webkit-details-marker { display: none; }  /* older Safari */
+
+    .jump__list {
+      position: absolute;
+      left: 0;
+      bottom: 100%;         /* drop UP, flush to the button's top edge */
+      min-width: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      background-color: rgba(230, 230, 230, 0.9);  /* slightly greyer than the button */
+      -webkit-backdrop-filter: blur(1rem);
+      backdrop-filter: blur(1rem);
+    }
+    .jump__list a {
+      display: block;
+      padding: 16px;        /* = nav padding; left edge aligns under the button text */
+      color: #000;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .jump__list a:hover { color: var(--ck-muted); }
+
+    /* Clear the sticky nav so a jumped-to section isn't tucked beneath it. */
+    #archive,
+    #projects { scroll-margin-top: 88px; }
+
+    @media (min-width: 641px) {
+      .jump { margin: 24px; }                     /* = nav left padding */
+      .jump__button,
+      .jump__list a { padding: 12px 24px 8px; }   /* = nav padding */
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .jump__list a { transition: none; }
+    }
   </style>
 </head>
 <body id="top">
   <header class="nav" id="nav">
     <div class="nav__sizer" aria-hidden="true">CHYBIK + KRISTOF</div>
     <div class="nav__bar">
-      <p class="nav__text"><span class="nav__brand">CHYBIK <span class="m">+</span> KRISTOF</span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;ARCHITECTS <span class="m">+</span> <span class="m">153</span>&nbsp;CLIENTS <span class="m">+</span> <span class="m">20</span>&nbsp;COUNTRIES <span class="m">=</span> <span class="m">608</span>&nbsp;PROJECTS<span class="m">;</span> <span class="m">16</span>&nbsp;INSIGHTS<span class="m">;</span> <span class="m">22</span>&nbsp;UPDATES<span class="m">;</span> <span class="m">1</span>&nbsp;BOOK<span class="m">;</span> <span class="m">3</span>&nbsp;JOBS<span class="m">;</span> <span class="m">4</span>&nbsp;OFFICES<span class="m">.</span></span></p>
+      <p class="nav__text"><span class="nav__brand"><a class="nav__link">CHYBIK</a> <span class="m">+</span> <a class="nav__link">KRISTOF</a></span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;<a class="nav__link">ARCHITECTS</a> <span class="m">+</span> <span class="m">153</span>&nbsp;<a class="nav__link">CLIENTS</a> <span class="m">+</span> <span class="m">20</span>&nbsp;<a class="nav__link">COUNTRIES</a> <span class="m">=</span> <span class="m">608</span>&nbsp;<a class="nav__link">PROJECTS</a><span class="m">;</span> <span class="m">16</span>&nbsp;<a class="nav__link">INSIGHTS</a><span class="m">;</span> <span class="m">22</span>&nbsp;<a class="nav__link">UPDATES</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">BOOK</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">JOBS</a><span class="m">;</span> <span class="m">4</span>&nbsp;<a class="nav__link">OFFICES</a><span class="m">.</span></span></p>
 
       <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Toggle studio facts">
         <span class="nav__toggle-label">MENU</span>
@@ -524,7 +615,7 @@
   <main class="page">
     <section class="module-archive" id="archive" aria-label="Projects"></section>
 
-    <section class="project-list" aria-label="Project list">
+    <section class="project-list" id="projects" aria-label="Project list">
       <header class="project-list__head">
         <h2 class="project-list__title">Projects</h2>
         <div class="project-list__labels" aria-hidden="true">
@@ -588,6 +679,16 @@
     </div>
   </footer>
 
+  <!-- Jump-to-section menu: a CSS-only <details> drop-up. Anchor links handle
+       the navigation; no script required. -->
+  <details class="jump">
+    <summary class="jump__button"><span class="jump__label">Selected Projects</span></summary>
+    <ul class="jump__list">
+      <li><a href="#archive">Selected Projects</a></li>
+      <li><a href="#projects">All Projects</a></li>
+    </ul>
+  </details>
+
   <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
   <script src="manifest.js"></script>
   <script>
@@ -638,15 +739,18 @@
     })();
   </script>
 
-  <!-- Project list: build all placeholder rows up front, then reveal them 10
-       at a time. The last visible row fades as a teaser while more remain. -->
+  <!-- Project list: build every row from window.PROJECTS up front, then reveal
+       them 10 at a time. The last visible row fades as a teaser while more
+       remain. -->
+  <script src="projects.js"></script>
   <script>
     (function () {
       var rowsEl = document.getElementById("projectRows");
       var moreBtn = document.getElementById("projectMore");
       if (!rowsEl || !moreBtn) return;
 
-      var TOTAL = 30, STEP = 10, shown = 0;
+      var projects = window.PROJECTS || [];
+      var STEP = 10, TOTAL = projects.length, shown = 0;
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
       // Idempotent: if the script re-runs (e.g. live-preview hot reload), start
@@ -654,20 +758,38 @@
       // stranded faded row from a previous pass.
       rowsEl.innerHTML = "";
 
+      // textContent (not innerHTML) so any commas/markup-like characters in the
+      // data render as literal text rather than breaking the row.
+      function cell(text) {
+        var span = document.createElement("span");
+        span.className = "project-row__cell";
+        span.textContent = text;
+        return span;
+      }
+
       var frag = document.createDocumentFragment();
-      for (var i = 0; i < TOTAL; i++) {
+      projects.forEach(function (p) {
         var row = document.createElement("div");
         row.className = "project-row";
         row.hidden = true;
-        row.innerHTML =
-          '<span class="project-row__cell"><span class="project-row__num">###</span>' +
-          '<span class="project-row__name">Project Name</span></span>' +
-          '<span class="project-row__cell">City, CZ</span>' +
-          '<span class="project-row__cell">category</span>' +
-          '<span class="project-row__cell">status</span>' +
-          '<span class="project-row__cell">2026</span>';
+
+        var name = cell("");
+        var num = document.createElement("span");
+        num.className = "project-row__num";
+        num.textContent = p.num;
+        var label = document.createElement("span");
+        label.className = "project-row__name";
+        label.textContent = p.name;
+        name.appendChild(num);
+        name.appendChild(label);
+
+        row.appendChild(name);
+        row.appendChild(cell(p.city));
+        row.appendChild(cell(p.category));
+        row.appendChild(cell(p.status));
+        row.appendChild(cell(p.year));
         frag.appendChild(row);
-      }
+      });
       rowsEl.appendChild(frag);
       var allRows = rowsEl.querySelectorAll(".project-row");
 
@@ -706,7 +828,7 @@
         if (e.propertyName === "height") rowsEl.style.height = "";
       });
 
-      shown = STEP;
+      shown = Math.min(STEP, TOTAL);
       render();
     })();
   </script>
@@ -787,6 +909,33 @@
         if (e.propertyName === "opacity" && nav.classList.contains("is-closing")) {
           finishClose();
         }
+      });
+    })();
+  </script>
+
+  <!-- Jump menu label: reflect whichever section currently sits across the
+       viewport's vertical middle, so the button reads like a <select>'s current
+       value. The menu links are the single source of truth for the targets and
+       their display names. -->
+  <script>
+    (function () {
+      var label = document.querySelector(".jump__label");
+      var links = document.querySelectorAll(".jump__list a");
+      if (!label || !links.length) return;
+
+      // A zero-height root at the viewport's vertical center: a section "is
+      // current" while it straddles that line. The last section to cross it wins.
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) label.textContent = entry.target.dataset.jumpLabel;
+        });
+      }, { rootMargin: "-50% 0px -50% 0px" });
+
+      links.forEach(function (a) {
+        var section = document.getElementById(a.getAttribute("href").slice(1));
+        if (!section) return;
+        section.dataset.jumpLabel = a.textContent.trim();
+        io.observe(section);
       });
     })();
   </script>
