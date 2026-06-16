@@ -64,11 +64,11 @@ body:has(.nav.is-closing) .hero__text {
 }
 
 @media (min-width: 641px) {
-  .hero__text { font-size: 3rem; }   /* 48px */
+  .hero__text { grid-column: 1 / span 10; font-size: 3rem; }   /* 48px */
 }
 
 @media (min-width: 1025px) {
-  .hero__text { grid-column: 1 / span 9; font-size: 4rem; }   /* 64px, columns 1-9 */
+  .hero__text { grid-column: 1 / span 10; font-size: 3rem; }   /* 64px, columns 1-9 */
 }
 
 @media (prefers-reduced-motion: reduce) {
