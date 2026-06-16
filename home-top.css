@@ -1,0 +1,76 @@
+/* =====================================================================
+   Homepage layout variant: TOP-ALIGNED hero
+   Loaded next to style.css on home.html. Shared base (nav, footer, grid,
+   wordmark reveal) lives in style.css; this file only adds the variant's
+   homepage layout. Pairs the wordmark reveal with a transparent nav at the
+   top, the page pulled up under the nav, a compact hero whose text lines up
+   with the nav, and the hero text hidden while the menu is open.
+   ===================================================================== */
+
+/* Pull the page up under the sticky nav so the hero text's top lines up with the
+   top of the nav rather than sitting below it (--nav-h measured in site.js). */
+.home {
+  margin-top: calc(-1 * var(--nav-h, 0px));
+}
+
+/* At the very top the bar is transparent (just MENU floating over the hero); the
+   glass returns on scroll, or while the menu is open/closing so the studio facts
+   stay readable. The existing background-color transition on .nav__bar fades it. */
+.nav--reveal-on-scroll .nav__bar {
+  background-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.nav--reveal-on-scroll.is-scrolled .nav__bar,
+.nav--reveal-on-scroll.is-open .nav__bar,
+.nav--reveal-on-scroll.is-closing .nav__bar {
+  background-color: rgba(250, 250, 250, 0.9);
+  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
+}
+
+/* Compact hero: only as tall as the text, which sits at the top (12px down to
+   match the nav's top padding). The gap to the grid lives on .home-grid below,
+   so the hero box ends at the text — which is where the scroll-reveal fires. */
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--page-pad-x);
+  padding-top: 12px;
+}
+
+.hero__text {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 2rem;            /* 32px (→ 48px ≥641, → 64px ≥1025) */
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide the hero text while the menu is open/closing so the expanding facts never
+   half-cover it (the hero is pulled up under the transparent nav). Keyed off the
+   nav state from the shared <body> via :has(); only the text fades, grid stays. */
+body:has(.nav.is-open) .hero__text,
+body:has(.nav.is-closing) .hero__text {
+  opacity: 0;
+}
+
+/* Gap from the hero down to the grid. */
+.home-grid {
+  padding-top: 112px;
+}
+
+@media (min-width: 641px) {
+  .hero__text { font-size: 3rem; }   /* 48px */
+}
+
+@media (min-width: 1025px) {
+  .hero__text { grid-column: 1 / span 9; font-size: 4rem; }   /* 64px, columns 1-9 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__text { transition: none; }
+}

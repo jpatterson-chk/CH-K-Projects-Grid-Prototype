@@ -107,18 +107,26 @@
   });
 })();
 
-/* Homepage hero: the nav wordmark/tagline start hidden and fade in once the
-   page has scrolled (the MENU toggle stays visible). Opt-in via the
+/* Homepage hero: the nav wordmark/tagline start hidden and fade in once the hero
+   (the first section) has scrolled fully past the top of the viewport — i.e. its
+   bottom edge crosses the top of the screen — rather than at a fixed pixel
+   offset. The MENU toggle stays visible throughout. Opt-in via the
    .nav--reveal-on-scroll class, so it's a no-op on pages without it. */
 (function () {
   var nav = document.getElementById("nav");
   if (!nav || !nav.classList.contains("nav--reveal-on-scroll")) return;
 
-  function update() {
-    nav.classList.toggle("is-scrolled", window.scrollY > 8);
-  }
-  update();   // set the initial state (e.g. when loaded already scrolled)
-  window.addEventListener("scroll", update, { passive: true });
+  var hero = document.querySelector(".hero");
+  if (!hero) { nav.classList.add("is-scrolled"); return; }   // no hero: just show the nav
+
+  // is-scrolled while the hero is NOT intersecting the viewport (scrolled above
+  // its top edge). IntersectionObserver re-checks on scroll/resize on its own.
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      nav.classList.toggle("is-scrolled", !entry.isIntersecting);
+    });
+  }, { threshold: 0 });
+  io.observe(hero);
 })();
 
 /* Expose the nav's reserved height as --nav-h so the homepage hero can fill the

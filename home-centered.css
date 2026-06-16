@@ -1,0 +1,38 @@
+/* =====================================================================
+   Homepage layout variant: CENTERED hero band
+   Loaded next to style.css on home-centered.html. Shared base (nav, footer,
+   grid, wordmark reveal) lives in style.css; this file only adds the variant's
+   hero. The nav keeps its glass (base) and the wordmark reveals on scroll
+   (shared). The hero fills ~half the first screen below the nav with the text
+   vertically centred, so the top of the grid peeks above the fold. The open
+   menu's glass panel simply frosts the hero below it — no hide needed.
+   ===================================================================== */
+
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--page-pad-x);
+  /* Fill ~half the first screen below the nav (--nav-h from site.js) and centre
+     the text in that band; the grid follows after the margin-bottom gap. */
+  min-height: calc(50svh - var(--nav-h, 0px));
+  align-content: center;
+  margin-bottom: 96px;
+}
+
+.hero__text {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 2rem;            /* 32px (→ 48px ≥641, → 64px ≥1025) */
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+@media (min-width: 641px) {
+  .hero__text { font-size: 3rem; }   /* 48px */
+}
+
+@media (min-width: 1025px) {
+  .hero__text { font-size: 4rem; }   /* 64px */
+}

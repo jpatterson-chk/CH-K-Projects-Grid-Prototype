@@ -647,46 +647,11 @@ body {
 --------------------------------------------------------------------- */
 .home {
   --home-card-ratio:  4 / 5;   /* uniform portrait frame for every grid image */
-  padding: 0 var(--page-pad-x) 24px;   /* no top pad: the hero butts to the nav */
+  padding: 0 var(--page-pad-x) 24px;
 }
 
-/* Hero intro: a 12-column grid sharing the page gutter (--page-pad-x), so the
-   line aligns with the footer's 12-col system. On desktop it fills columns
-   3-10, leaving two empty columns each side. (Smaller breakpoints still TBD.) */
-.hero {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: var(--page-pad-x);
-  /* Span ~two-thirds of the first screen (below the nav) so the top of the
-     grid peeks above the fold, with the text centred in that band. (--nav-h is
-     measured in site.js; falls back to the same fraction of the full screen.) */
-  min-height: calc(50svh - var(--nav-h, 0px));
-  align-content: center;
-  margin-bottom: 96px;
-}
-
-.hero__text {
-  grid-column: 1 / -1;          /* full width */
-  margin: 0;
-  font-size: 2rem;            /* 32px (steps up to 48px / 64px at the breakpoints below) */
-  line-height: 1.1;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: #000;
-}
-
-@media (min-width: 1025px) {
-  .hero__text {
-    grid-column: 1 / span 12;    /* full width (same as base) */
-    font-size: 4rem;         /* 64px */
-  }
-}
-
-@media (min-width: 641px) {
-  .hero__text {
-    font-size: 3rem;         /* 48px */
-  }
-}
+/* The hero band itself is layout-variant-specific — see home-top.css /
+   home-centered.css, each loaded next to this file on its own page. */
 
 .home-grid {
   display: grid;
