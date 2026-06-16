@@ -9,7 +9,7 @@ window.HOME_ORDER = [
   { file: "mendel-square.webp",                      title: "Mendel Square Reclaimed" },
   { file: "waltrovka-masterplan.webp",               title: "Waltrovka 630-home Masterplan" },
   { file: "mendel's-greenhouse.webp",                title: "Mendel's Greenhouse" },
-  { file: "nusle-brewery-quarter.webp",              title: "Brewery Quarter in Nusle" },
+  { file: "nusle-brewery-quarter.webp",              title: "Nusle Brewery Quarter" },
   // TODO: "Sugar Factory Neighbourhood" — no matching image in ./images/ yet.
   { file: "zvonarka-bus-station.webp",               title: "Zvonarka Bus Station" },
   { file: "modular-office-and-research-centre.webp", title: "Modular Office and Research Centre" },

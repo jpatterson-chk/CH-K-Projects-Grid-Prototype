@@ -106,3 +106,29 @@
     io.observe(section);
   });
 })();
+
+/* Homepage hero: the nav wordmark/tagline start hidden and fade in once the
+   page has scrolled (the MENU toggle stays visible). Opt-in via the
+   .nav--reveal-on-scroll class, so it's a no-op on pages without it. */
+(function () {
+  var nav = document.getElementById("nav");
+  if (!nav || !nav.classList.contains("nav--reveal-on-scroll")) return;
+
+  function update() {
+    nav.classList.toggle("is-scrolled", window.scrollY > 8);
+  }
+  update();   // set the initial state (e.g. when loaded already scrolled)
+  window.addEventListener("scroll", update, { passive: true });
+})();
+
+/* Expose the nav's reserved height as --nav-h so the homepage hero can fill the
+   viewport below it. Runs on every page (harmless where --nav-h is unused). */
+(function () {
+  var nav = document.getElementById("nav");
+  if (!nav) return;
+  function setNavHeight() {
+    document.documentElement.style.setProperty("--nav-h", nav.offsetHeight + "px");
+  }
+  setNavHeight();
+  window.addEventListener("resize", setNavHeight, { passive: true });
+})();
