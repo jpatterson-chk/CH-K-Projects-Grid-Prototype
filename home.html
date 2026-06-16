@@ -25,6 +25,9 @@
   </header>
 
   <main class="home">
+    <section class="hero">
+      <p class="hero__text">CHYBIK + KRISTOF is an international architecture and urban design practice.</p>
+    </section>
     <section class="home-grid" id="home-grid" aria-label="Featured projects"></section>
   </main>
 
@@ -90,47 +93,35 @@
     </ul>
   </details>
 
-  <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
-  <script src="manifest.js"></script>
+  <!-- Curated, ordered list of featured projects for the homepage grid. -->
+  <script src="home-order.js"></script>
   <script>
     (function () {
       var grid = document.getElementById("home-grid");
-      var images = window.PROJECT_IMAGES || [];
+      var items = window.HOME_ORDER || [];
       if (!grid) return;
 
-      if (!images.length) {
+      if (!items.length) {
         grid.innerHTML =
-          '<p class="archive-empty">No images found. Add files to ./images/ ' +
-          'and run ./generate-manifest.sh</p>';
+          '<p class="archive-empty">No projects listed. Add entries to ' +
+          'home-order.js</p>';
         return;
       }
 
-      // Derive a display title from the image filename.
-      function titleFromFilename(name) {
-        return name
-          .replace(/\.[^.]+$/, "")        // drop extension
-          .replace(/[-_]+/g, " ")          // dashes/underscores -> spaces
-          .replace(/\s+/g, " ")
-          .trim()
-          .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-      }
-
       var frag = document.createDocumentFragment();
-      images.forEach(function (file) {
-        var title = titleFromFilename(file);
-
+      items.forEach(function (item) {
         var card = document.createElement("figure");
         card.className = "home-card";
 
         // Title first so it sits ABOVE the image.
         var caption = document.createElement("figcaption");
         caption.className = "home-card__title";
-        caption.textContent = title;
+        caption.textContent = item.title;
 
         var img = document.createElement("img");
         img.className = "home-card__img";
-        img.src = "images/" + file;
-        img.alt = title;
+        img.src = "images/" + item.file;
+        img.alt = item.title;
 
         card.appendChild(caption);
         card.appendChild(img);

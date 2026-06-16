@@ -476,7 +476,7 @@ body {
 
 .footer__top {
   display: inline-flex;
-  align-items: end;
+  align-items: baseline;
   gap: 8px;
   text-decoration: underline;
   letter-spacing: 0.015em;
@@ -489,6 +489,10 @@ body {
   height: 1em;
   flex: none;
   fill: currentColor;
+  /* baseline alignment puts the icon's box bottom on the text baseline, but
+     the glyph has ~3/24em of empty padding below the arrow, leaving it
+     floating. Drop it by that amount so the arrow sits on the baseline. */
+  transform: translateY(0.125em);
 }
 
 /* Desktop: the shared 12-column grid + element placements. */
@@ -614,8 +618,8 @@ body {
 
 /* ---------------------------------------------------------------------
    Home grid (homepage prototype)
-   A calm, uniform grid: 2 columns on mobile, 3 from 641px up. Unlike the
-   projects grid (fixed card widths, space-between gutters), columns are
+   A calm, uniform grid: 1 column on mobile, 2 from 641px, 3 from 1025px up.
+   Unlike the projects grid (fixed card widths, space-between gutters), columns are
    fluid 1fr tracks with an EVEN column gap equal to the shared page side
    padding (--page-pad-x). Matching the gutter to the margin lines the
    outer columns up with the nav wordmark and keeps the rhythm consistent.
@@ -623,28 +627,61 @@ body {
    below).
 --------------------------------------------------------------------- */
 .home {
+  --home-card-ratio:  4 / 5;   /* uniform portrait frame for every grid image */
   padding: 24px var(--page-pad-x);
+}
+
+/* Hero intro: a 12-column grid sharing the page gutter (--page-pad-x), so the
+   line aligns with the footer's 12-col system. On desktop it fills columns
+   3-10, leaving two empty columns each side. (Smaller breakpoints still TBD.) */
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--page-pad-x);
+  margin-top: 56px;
+  margin-bottom: 96px;
+}
+
+.hero__text {
+  grid-column: 1 / -1;          /* full width below desktop (placeholder) */
+  margin: 0;
+  font-size: 2rem;            /* placeholder size until smaller breakpoints are set */
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+@media (min-width: 1025px) {
+  .hero__text {
+    grid-column: 1 / span 9;    /* columns 3-10 */
+    font-size: 2.5rem;         /* 60px */
+  }
 }
 
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   column-gap: var(--page-pad-x);
   row-gap: 40px;
 }
 
 @media (min-width: 641px) {
   .home { padding: 40px var(--page-pad-x); }
-  .home-grid { grid-template-columns: repeat(3, 1fr); row-gap: 56px; }
+  .home-grid { grid-template-columns: repeat(2, 1fr); row-gap: 56px; }
+}
+
+@media (min-width: 1025px) {
+  .home-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .home-card { margin: 0; display: block; }
 
-/* Title above the image, left-aligned, in the same quiet style as the
-   projects-grid caption. */
+/* Homepage caption: left-aligned above the image, in its own larger
+   treatment (distinct from the smaller projects-grid caption). */
 .home-card__title {
   margin: 0 0 8px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: #000;
@@ -654,8 +691,9 @@ body {
 
 .home-card__img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: 100%;                            /* height follows from the ratio + column width */
+  aspect-ratio: var(--home-card-ratio);
+  object-fit: cover;                      /* fill the frame, cropping any overflow */
 }
 
 @media (prefers-reduced-motion: reduce) {
