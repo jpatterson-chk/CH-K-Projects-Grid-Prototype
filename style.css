@@ -1,0 +1,663 @@
+/* ---------------------------------------------------------------------
+   Reset / base
+--------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;   /* Back to Top eases to the nav, no JS */
+}
+
+body {
+  margin: 0;
+  background: #fafafa;
+  color: #000;
+  font-family: "Arial", Arial,
+               system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------------------------------------------------------------
+   Design tokens
+   Shared values for every page. --page-pad-x is the horizontal page
+   padding / gutter, set to the nav's outside padding at each breakpoint.
+   Every page-framing element (nav, footer, .page, .home grid) draws its
+   left/right inset from it, so their edges line up everywhere and the
+   whole site reflows from a single change here.
+--------------------------------------------------------------------- */
+:root {
+  --ck-muted: #808080;
+  --page-pad-x: 16px;
+}
+@media (min-width: 641px) {
+  :root { --page-pad-x: 24px; }
+}
+
+.page {
+  padding: 16px var(--page-pad-x);
+}
+
+/* ---------------------------------------------------------------------
+   Grid container
+   Column count and card width are FIXED per breakpoint (not auto-fit /
+   minmax). The grid fills the full content width; `space-between`
+   distributes the leftover horizontal space into the column gaps, so the
+   gutters grow and shrink with the viewport while card width stays fixed.
+   (Exception: the widescreen breakpoint sizes cards in vw — see below.)
+--------------------------------------------------------------------- */
+.module-archive {
+  /* Defaults = smallest breakpoint (<= 640px). Overridden below. */
+  --module-archive-cols: 2;
+  --archive-card-w: 155px;
+  --archive-card-gap: 96px;    /* row gap */
+
+  display: grid;
+  grid-template-columns: repeat(var(--module-archive-cols), var(--archive-card-w));
+  row-gap: var(--archive-card-gap);
+  column-gap: 16px;            /* minimum gap; space-between adds more on wider viewports */
+  justify-content: space-between;
+  align-items: start;
+}
+
+/* 641px – 1024px */
+@media (min-width: 641px) {
+  .module-archive {
+    --module-archive-cols: 3;
+    --archive-card-w: 160px;
+    --archive-card-gap: 96px;
+  }
+  .page { padding: 56px var(--page-pad-x); }
+}
+
+/* 1025px – 1280px */
+@media (min-width: 1025px) {
+  .module-archive {
+    --module-archive-cols: 4;
+    --archive-card-w: 160px;
+    --archive-card-gap: 96px;
+  }
+  .page { padding: 64px var(--page-pad-x); }
+}
+
+/* 1281px – 1440px */
+@media (min-width: 1281px) {
+  .module-archive {
+    --module-archive-cols: 4;
+    --archive-card-w: 192px;
+    --archive-card-gap: 96px;
+  }
+  .page { padding: 72px var(--page-pad-x); }
+}
+
+/* 1441px – 1680px */
+@media (min-width: 1441px) {
+  .module-archive {
+    --module-archive-cols: 5;
+    --archive-card-w: 15vw;
+    --archive-card-gap: 96px;
+  }
+  .page { padding: 64px var(--page-pad-x) 24px; }
+}
+
+/* > 1680px */
+@media (min-width: 1681px) {
+  .module-archive {
+    --module-archive-cols: 5;
+    --archive-card-w: 12vw;      /* scale cards with the viewport on very wide screens */
+    --archive-card-gap: 96px;
+  }
+  .page { padding: 64px var(--page-pad-x) 24px; }
+}
+
+/* ---------------------------------------------------------------------
+   Card — no border, background, shadow, or lift. Just image + title.
+--------------------------------------------------------------------- */
+.archive-card {
+  margin: 0;
+  display: block;
+}
+
+.archive-card__img {
+  display: block;
+  width: 100%;       /* sizes to --archive-card-w; height stays proportional */
+  height: auto;
+}
+
+.archive-card:hover .archive-card__title {
+  color: var(--ck-muted);
+}
+
+.archive-card__title {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #000;
+  transition: color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-card__title { transition: none; }
+}
+
+.archive-empty {
+  color: #9a9a9a;
+  font-size: 13px;
+  text-align: center;
+  padding: 64px 0;
+}
+
+/* ---------------------------------------------------------------------
+   Top navigation bar
+   The wordmark and its suffix are ALWAYS a single run of inline text, so
+   wrapped lines naturally align to the left edge. Toggling MENU just swaps
+   which suffix shows (the "= ARCHITECTS" tagline vs. the studio facts) —
+   a one-line display swap, with no change of layout mode. The right-hand
+   control swaps MENU <-> × via the same stacked-cell technique.
+--------------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  /* Transparent positioning wrapper only. The glass (blur + tint) lives on
+     .nav__bar instead: a backdrop-filter here would make .nav a "backdrop
+     root", which silently disables .nav__bar's own backdrop-filter (a
+     nested backdrop-filter can't see past an ancestor that has one). */
+  background-color: transparent;
+  color: #000;
+  font-size: clamp(16px, 1.28vw, 24px);
+  line-height: 1.3;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+/* Reserves the closed, single-line bar height in normal flow. The real bar
+   (.nav__bar) overlays it and is free to grow downward over the page, so
+   opening the menu never shifts the content below it. */
+.nav__sizer {
+  margin: 0;
+  padding: 16px var(--page-pad-x);
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.nav__bar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  align-items: flex-start;   /* toggle pins to the top line */
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px var(--page-pad-x);
+  /* The single glass surface for both states. .nav__bar covers the closed
+     strip (inset top) and grows down into the open panel, so one blur +
+     tint here frosts everything with no nested-backdrop-filter problem.
+     0.85 alpha lets the page show through, blurred. */
+  background-color: rgba(250, 250, 250, 0.9);
+  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
+  /* Height is driven by JS on close: it locks the expanded height, then
+     transitions down to the closed one-line height (.nav__sizer measures
+     it), then releases back to auto. overflow:hidden clips the wrapped
+     facts as the panel rolls up. */
+  overflow: hidden;
+  transition: background-color 0.3s ease,
+              height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (min-width: 641px)  { .nav__sizer, .nav__bar { padding: 12px var(--page-pad-x) 8px; } }
+
+/* The wordmark + suffix live in one paragraph of inline text and take all
+   width up to the toggle, so the facts can wrap onto further lines. */
+.nav__text {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.nav__brand   { color: #000; white-space: nowrap; }  /* never break the wordmark */
+.nav .m       { color: var(--ck-muted); }            /* grey connectors + numbers */
+
+/* Each meaningful word is a placeholder link (no href yet, like the footer
+   links): inherits the surrounding colour, fades to muted on hover. */
+.nav__link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.nav__link:hover { color: var(--ck-muted); }
+
+/* The tagline (closed) and facts (open) share the suffix slot. The facts
+   fade via opacity; the tagline just swaps in/out. The catch is ordering
+   on CLOSE: the facts must leave the flow BEFORE the tagline re-enters it,
+   or both occupy the line and force an extra wrap. CSS can't sequence this
+   — a discrete `display` flip to a visible value takes effect immediately,
+   ignoring transition-delay — so JS drives the close: it adds .is-closing
+   to fade the facts out, then on transitionend drops it, which hides the
+   facts and restores the tagline in a SINGLE reflow. */
+.nav__tagline {
+  color: var(--ck-muted);
+  transition: opacity 0.3s ease;
+}
+/* The tagline fades in when it returns at the end of a close. JS adds this
+   class while the tagline is still hidden, drops .is-closing (so it
+   displays at opacity 0, no transition), forces a reflow, then removes this
+   class — letting opacity transition 0 -> 1. Scoping the fade to this class
+   (rather than @starting-style) keeps it from also firing on page load. */
+.nav.tagline-enter .nav__tagline { opacity: 0; transition: none; }
+.nav__facts {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Mobile: "= ARCHITECTS" is too long for the closed bar — drop it. */
+@media (max-width: 640px) { .nav__tagline { display: none; } }
+
+/* Open and closing both keep the facts in the slot and the tagline out. */
+.nav.is-open .nav__tagline,
+.nav.is-closing .nav__tagline { display: none; }
+.nav.is-open .nav__facts,
+.nav.is-closing .nav__facts   { display: inline; }
+
+/* Facts are opaque only while fully open; .is-closing lets opacity fall
+   back to its 0 base, fading them out. @starting-style supplies the 0 ->
+   1 start when opening. */
+.nav.is-open .nav__facts { opacity: 1; }
+@starting-style {
+  .nav.is-open .nav__facts { opacity: 0; }
+}
+
+
+/* Right control: MENU <-> × , stacked in one cell, right-aligned. */
+.nav__toggle {
+  flex: none;
+  display: inline-grid;
+  align-items: center;
+  justify-items: end;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.nav__toggle:hover { color: var(--ck-muted); }
+.nav__toggle > * {
+  grid-area: 1 / 1;
+  transition: opacity 0.3s ease;
+}
+.nav__toggle-label { opacity: 1; }
+.nav__toggle-close {
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.nav__toggle-close svg { display: block; }
+
+.nav.is-open .nav__toggle-label { opacity: 0; }
+.nav.is-open .nav__toggle-close { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__bar,
+  .nav__tagline,
+  .nav__facts,
+  .nav__link,
+  .nav__toggle,
+  .nav__toggle > * { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   Project list
+   A table-style listing with progressive disclosure. The header (title +
+   column labels) and every row share one column template (--project-cols)
+   so the labels sit directly over their data columns. On narrow screens
+   the grid collapses and each row flows as a single comma-separated line.
+--------------------------------------------------------------------- */
+.project-list {
+  --project-cols: minmax(0, 2.2fr) 1fr 1fr 1fr 0.8fr;
+  margin-top: 96px;
+}
+
+/* Title + the 4 column labels on one baseline-aligned row. */
+.project-list__head {
+  display: grid;
+  grid-template-columns: var(--project-cols);
+  column-gap: 24px;
+  align-items: baseline;
+  padding-bottom: 48px;
+}
+
+.project-list__title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+  color: #000;
+}
+
+/* display:contents lets the 4 label spans land in grid columns 2-5. */
+.project-list__labels { display: contents; }
+.project-list__labels > span {
+  color: var(--ck-muted);
+  font-size: clamp(16px, 1.28vw, 24px);
+  letter-spacing: 0.015em;
+}
+
+/* Unrolls on reveal: JS animates its height between batches. */
+.project-list__rows {
+  overflow: hidden;
+  transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* One row = the shared grid. No border, background, or shadow. */
+.project-row {
+  display: grid;
+  grid-template-columns: var(--project-cols);
+  column-gap: 24px;
+  padding: 4px 0;
+  font-size: clamp(16px, 1.28vw, 24px);
+  letter-spacing: 0.015em;
+  color: #000;
+}
+
+.project-row__num {
+  margin-right: 0.5em;
+  color: var(--ck-muted);
+}
+
+/* The `.project-row` display rules above override the UA's
+   `[hidden] { display: none }`, so re-assert it for JS-hidden rows. */
+.project-row[hidden] { display: none; }
+
+/* Teaser: the last visible row fades while more rows remain hidden. */
+.project-row.is-fade { opacity: 0.35; }
+
+/* Minimal text button, centered below the rows. */
+.project-list__more {
+  display: block;
+  margin: 32px auto 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ck-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.project-list__more:hover { color: #000; }
+.project-list__more[hidden] { display: none; }
+
+/* Mobile: collapse each row to a single flowing line of text:
+   "### Project Name, City, CZ, category, status, 2026." */
+@media (max-width: 640px) {
+  .project-list { margin-top: 64px; }
+  .project-list__labels { display: none; }
+
+  .project-row {
+    display: block;
+    padding: 8px 0;
+    line-height: 1.4;
+  }
+  .project-row__cell,
+  .project-row__num,
+  .project-row__name { display: inline; }
+
+  /* Separators between the inline cells (desktop grid shows none). */
+  .project-row__name::after { content: ", "; }
+  .project-row__cell + .project-row__cell::after { content: ", "; }
+  .project-row__cell:last-child::after { content: "."; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-list__more { transition: none; }
+  .project-list__rows { transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------------------------------------------------------------------
+   Footer
+   Columns sit on a reusable 12-column grid (.footer__grid) shared by the
+   main block and the bottom bar, so every element lines up on the same
+   column lines. Mobile-first: the base is a single-column stack; the
+   12-col template and all placements live in the >=641px block.
+--------------------------------------------------------------------- */
+.footer { background: #fafafa; padding: 64px var(--page-pad-x) 40px; }
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 40px;
+}
+
+.footer__bottom { margin-top: 56px; }
+
+.footer__heading {
+  margin: 0 0 24px;
+  font-size: clamp(16px, 1.28vw, 24px);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.footer a {
+  color: var(--ck-muted);
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;   /* placeholder links have no href yet */
+  transition: color 0.2s ease;
+}
+.footer a:hover { color: #000; }
+
+.footer__copy {
+  margin: 0;
+  color: var(--ck-muted);
+  font-size: 16px;
+}
+
+.footer__top {
+  display: inline-flex;
+  align-items: end;
+  gap: 8px;
+  text-decoration: underline;
+  letter-spacing: 0.015em;
+}
+
+/* Sizes to the text (1em) and follows the link colour via currentColor, so it
+   inherits the muted->black hover like the rest of the footer links. */
+.footer__top-icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: currentColor;
+}
+
+/* Desktop: the shared 12-column grid + element placements. */
+@media (min-width: 641px) {
+  .footer { padding: 96px var(--page-pad-x) 48px; }
+  .footer__grid {
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 24px;
+  }
+  .footer__brand         { grid-column: 1 / span 2; }
+  /* Keep the wordmark on one line; the empty columns 3-6 give it room to
+     extend past its 2-col slot at narrow desktop widths (~1072px). */
+  .footer__brand .footer__heading { white-space: nowrap; }
+  .footer__col--studio   { grid-column: 7 / span 2; }
+  .footer__col--projects { grid-column: 9 / span 2; }
+  .footer__col--contact  { grid-column: 11 / span 2; }
+  .footer__copy          { grid-column: 1 / span 3; }
+  .footer__privacy       { grid-column: 4 / span 2; }
+  .footer__top           { grid-column: 11 / span 2; align-items: baseline}
+}
+@media (min-width: 1025px) { .footer { padding: 120px var(--page-pad-x) 56px; } }
+@media (min-width: 1281px) { .footer { padding: 140px var(--page-pad-x) 24px; } }
+
+/* Mobile: two-column block with slightly smaller links. */
+@media (max-width: 640px) {
+  .footer { padding: 64px var(--page-pad-x) 16px; }
+  .footer__main { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+  .footer__grid { row-gap: 32px; }
+  .footer__links { row-gap: 8px; }
+  .footer a,
+  .footer__copy { font-size: 12px; }
+  /* Headings match the list-item size and sit tighter to their links. */
+  .footer__heading { font-size: 14px; margin-bottom: 8px; }
+  /* Bottom bar: privacy | back-to-top on one row, copyright below. */
+  .footer__bottom {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 24px;
+    font-size: 12px;
+  }
+  .footer__privacy { grid-column: 1; grid-row: 1; }
+  .footer__top     { grid-column: 2; grid-row: 1; }
+  .footer__copy    { grid-column: 1 / -1; grid-row: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer a { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   Jump-to-section control
+   A pure-HTML <details> menu pinned to the bottom-left, mirroring the nav:
+   same type, padding, and glass surface, with square corners. The list
+   drops UP (bottom: 100%) because the control sits at the foot of the
+   viewport. As with the nav, the glass lives on the inner surfaces
+   (summary + list), not the .jump wrapper — a backdrop-filter on the
+   wrapper would disable the nested ones. The anchors do the jumping;
+   smooth scroll is already set on <html>.
+--------------------------------------------------------------------- */
+.jump {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 30;          /* above the sticky nav and page content */
+  margin: var(--page-pad-x);   /* sits on the shared page gutter, edges aligned */
+  font-size: clamp(16px, 1.28vw, 24px);
+  line-height: 1.3;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.jump__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px var(--page-pad-x);   /* = nav padding */
+  background-color: rgba(240, 240, 240, 0.9);
+  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
+  cursor: pointer;
+  white-space: nowrap;
+  list-style: none;     /* drop the default disclosure triangle */
+}
+.jump__button::-webkit-details-marker { display: none; }  /* older Safari */
+
+.jump__list {
+  position: absolute;
+  left: 0;
+  bottom: 100%;         /* drop UP, flush to the button's top edge */
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: rgba(230, 230, 230, 0.9);  /* slightly greyer than the button */
+  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
+}
+.jump__list a {
+  display: block;
+  padding: 16px var(--page-pad-x);   /* = nav padding; aligns under the button text */
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.jump__list a:hover { color: var(--ck-muted); }
+
+/* Clear the sticky nav so a jumped-to section isn't tucked beneath it. */
+#archive,
+#projects { scroll-margin-top: 88px; }
+
+@media (min-width: 641px) {
+  /* margin + horizontal padding follow --page-pad-x; only the vertical
+     padding changes here. */
+  .jump__button,
+  .jump__list a { padding: 12px var(--page-pad-x) 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jump__list a { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   Home grid (homepage prototype)
+   A calm, uniform grid: 2 columns on mobile, 3 from 641px up. Unlike the
+   projects grid (fixed card widths, space-between gutters), columns are
+   fluid 1fr tracks with an EVEN column gap equal to the shared page side
+   padding (--page-pad-x). Matching the gutter to the margin lines the
+   outer columns up with the nav wordmark and keeps the rhythm consistent.
+   Titles sit left-aligned ABOVE each image (the projects grid puts them
+   below).
+--------------------------------------------------------------------- */
+.home {
+  padding: 24px var(--page-pad-x);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: var(--page-pad-x);
+  row-gap: 40px;
+}
+
+@media (min-width: 641px) {
+  .home { padding: 40px var(--page-pad-x); }
+  .home-grid { grid-template-columns: repeat(3, 1fr); row-gap: 56px; }
+}
+
+.home-card { margin: 0; display: block; }
+
+/* Title above the image, left-aligned, in the same quiet style as the
+   projects-grid caption. */
+.home-card__title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: #000;
+  transition: color 0.2s ease;
+}
+.home-card:hover .home-card__title { color: var(--ck-muted); }
+
+.home-card__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card__title { transition: none; }
+}
