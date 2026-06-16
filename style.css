@@ -668,7 +668,7 @@ body {
 .hero__text {
   grid-column: 1 / -1;          /* full width below desktop (placeholder) */
   margin: 0;
-  font-size: 3rem;            /* placeholder size until smaller breakpoints are set */
+  font-size: 2rem;            /* placeholder size until smaller breakpoints are set */
   line-height: 1.1;
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -677,8 +677,14 @@ body {
 
 @media (min-width: 1025px) {
   .hero__text {
-    grid-column: 1 / span 9;    /* columns 3-10 */
+    grid-column: 1 / span 12;    /* columns 3-10 */
     font-size: 4rem;         /* 60px */
+  }
+}
+
+@media (min-width: 641px) {
+  .hero__text {
+    font-size: 3rem;         /* 48px */
   }
 }
 
