@@ -20,6 +20,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Shared chrome injected by chrome.js: these wrappers generate no box, so the
+   nav (sticky), footer, and jump (fixed) behave as direct children of <body>. */
+site-nav,
+site-footer,
+site-jump { display: contents; }
+
 /* ---------------------------------------------------------------------
    Design tokens
    Shared values for every page. --page-pad-x is the horizontal page
