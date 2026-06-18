@@ -700,3 +700,136 @@ site-jump { display: contents; }
 @media (prefers-reduced-motion: reduce) {
   .home-card__title { transition: none; }
 }
+
+/* ---------------------------------------------------------------------
+   Updates block
+   A full-width studio-updates list dropped among the grid cards (via a
+   { block: "updates" } entry in home-order.js). Text matches the projects-
+   list component — title 40px, rows --font-ui, muted dates — with a divider
+   rule under each row.
+--------------------------------------------------------------------- */
+.home-updates {
+  grid-column: 1 / -1;   /* span the full grid width, whatever the column count */
+}
+
+.home-updates__title {
+  margin: 0 0 32px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+  color: #000;
+}
+
+.home-updates__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Rows and the trailing "All Updates" link share the same two-column layout:
+   headline left, date/arrow right, divider underneath. */
+.home-updates__row,
+.home-updates__more {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid #ccc;
+  font-size: var(--font-ui);
+  letter-spacing: 0.015em;
+  color: #000;
+}
+
+.home-updates__text { flex: 1 1 auto; min-width: 0; }   /* headline takes the space, wraps */
+.home-updates__date,
+.home-updates__arrow { flex: none; }
+.home-updates__date { color: var(--ck-muted); }
+
+.home-updates__link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Minimal "All Updates →" link: muted, darkens on hover. Keeps the same divider
+   below its padding as the update rows. */
+.home-updates__more {
+  color: var(--ck-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.home-updates__more:hover { color: #000; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-updates__more { transition: none; }
+}
+
+/* Featured variation: a highlighted update (image + caption) beside the list.
+   Mobile-first — the featured stacks above the list (block flow); the two-column
+   layout kicks in from 641px up. */
+.home-updates__featured { margin: 0 0 32px; }
+
+.home-updates__featured-media {
+  aspect-ratio: 3 / 2;     /* gives the image height while stacked on mobile */
+  overflow: hidden;
+}
+.home-updates__featured-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* fill the frame, cropping any overflow */
+}
+
+.home-updates__featured-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 16px;
+  font-size: var(--font-ui);
+  letter-spacing: 0.015em;
+  color: #000;
+}
+
+/* The two-column layout needs real width — below 1081px it's too cramped, so the
+   featured block stays single-column (stacked) like the mobile setup. */
+@media (min-width: 1081px) {
+  .home-updates--featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+  }
+  .home-updates--featured .home-updates__title { grid-column: 1 / -1; }
+  /* The featured column sets a comfortable, width-independent height (min-height);
+     its image fills that height (flex-grow from a 0 basis, object-fit: cover from
+     the base rule) and the caption drops to the bottom. */
+  .home-updates__featured {
+    margin: 0;
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+  }
+  .home-updates__featured-media {
+    flex: 1 1 0;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  /* The list fills the same height instead of sitting compact at the top:
+     flattening the <ul> (display: contents) makes the rows and the "All Updates"
+     link siblings, and space-between spreads them so the first row tops out with
+     the image and "All Updates" bottoms out with the featured caption. */
+  .home-updates__col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .home-updates__list { display: contents; }
+}
+
+/* Very wide screens: the 50/50 split makes the featured image too wide, so give
+   it 4 of 12 columns and let the list fill the other 8. */
+@media (min-width: 1441px) {
+  .home-updates--featured { grid-template-columns: 4fr 8fr; }
+}

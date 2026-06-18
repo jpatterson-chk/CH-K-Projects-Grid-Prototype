@@ -9,6 +9,11 @@ window.HOME_ORDER = [
   { file: "mendel-square.webp",                      title: "Mendel Square Reclaimed" },
   { file: "waltrovka-masterplan.webp",               title: "Waltrovka 630-home Masterplan" },
   { file: "mendel's-greenhouse.webp",                title: "Mendel's Greenhouse" },
+  // Full-width studio updates list (content in updates.js). It spans every
+  // column, so to avoid empty cells keep it on a row boundary — a multiple of 6
+  // cards lands cleanly at all breakpoints (1 / 2 / 3 columns).
+  { block: "updates" },
+  { block: "updates-featured" },   // variation B: featured update + list (stacks cleanly after block A)
   { file: "nusle-brewery-quarter.webp",              title: "Nusle Brewery Quarter" },
   // TODO: "Sugar Factory Neighbourhood" — no matching image in ./images/ yet.
   { file: "zvonarka-bus-station.webp",               title: "Zvonarka Bus Station" },
