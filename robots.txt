@@ -1,0 +1,4 @@
+# Private prototype shared for internal review only.
+# Request that crawlers neither crawl nor index any of it.
+User-agent: *
+Disallow: /

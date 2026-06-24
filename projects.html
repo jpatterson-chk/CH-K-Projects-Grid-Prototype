@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Projects</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="chrome.js"></script>
+</head>
+<body id="top">
+  <site-nav></site-nav>
+
+  <main class="page">
+    <section class="module-archive" id="archive" aria-label="Projects"></section>
+
+    <section class="project-list" id="projects" aria-label="Project list">
+      <header class="project-list__head">
+        <h2 class="project-list__title">Projects</h2>
+        <div class="project-list__labels" aria-hidden="true">
+          <span>City</span><span>Category</span><span>Status</span><span>Year</span>
+        </div>
+      </header>
+      <div class="project-list__rows" id="projectRows"></div>
+      <button class="project-list__more" id="projectMore" type="button">View More +</button>
+    </section>
+  </main>
+
+  <site-footer></site-footer>
+
+  <!-- Jump menu uses same-page anchors (no base); label tracks the section. -->
+  <site-jump label="Selected Projects"></site-jump>
+
+  <!-- Generated list of filenames in ./images/ (see generate-manifest.sh). -->
+  <script src="manifest.js"></script>
+  <script>
+    (function () {
+      var grid = document.getElementById("archive");
+      var images = window.PROJECT_IMAGES || [];
+
+      if (!images.length) {
+        grid.innerHTML =
+          '<p class="archive-empty">No images found. Add files to ./images/ ' +
+          'and run ./generate-manifest.sh</p>';
+        return;
+      }
+
+      // Derive a display title from the image filename.
+      function titleFromFilename(name) {
+        return name
+          .replace(/\.[^.]+$/, "")        // drop extension
+          .replace(/[-_]+/g, " ")          // dashes/underscores -> spaces
+          .replace(/\s+/g, " ")
+          .trim()
+          .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      }
+
+      var frag = document.createDocumentFragment();
+
+      images.forEach(function (file) {
+        var title = titleFromFilename(file);
+
+        var card = document.createElement("figure");
+        card.className = "archive-card";
+
+        var img = document.createElement("img");
+        img.className = "archive-card__img";
+        img.src = "images/" + file;
+        img.alt = title;
+
+        var caption = document.createElement("figcaption");
+        caption.className = "archive-card__title";
+        caption.textContent = title;
+
+        card.appendChild(img);
+        card.appendChild(caption);
+        frag.appendChild(card);
+      });
+
+      grid.appendChild(frag);
+    })();
+  </script>
+
+  <!-- Project list: build every row from window.PROJECTS up front, then reveal
+       them 10 at a time. The last visible row fades as a teaser while more
+       remain. -->
+  <script src="projects.js"></script>
+  <script>
+    (function () {
+      var rowsEl = document.getElementById("projectRows");
+      var moreBtn = document.getElementById("projectMore");
+      if (!rowsEl || !moreBtn) return;
+
+      var projects = window.PROJECTS || [];
+      var STEP = 10, TOTAL = projects.length, shown = 0;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      // Idempotent: if the script re-runs (e.g. live-preview hot reload), start
+      // from an empty container so we never end up with duplicate rows and a
+      // stranded faded row from a previous pass.
+      rowsEl.innerHTML = "";
+
+      // textContent (not innerHTML) so any commas/markup-like characters in the
+      // data render as literal text rather than breaking the row.
+      function cell(text) {
+        var span = document.createElement("span");
+        span.className = "project-row__cell";
+        span.textContent = text;
+        return span;
+      }
+
+      var frag = document.createDocumentFragment();
+      projects.forEach(function (p) {
+        var row = document.createElement("div");
+        row.className = "project-row";
+        row.hidden = true;
+
+        var name = cell("");
+        var num = document.createElement("span");
+        num.className = "project-row__num";
+        num.textContent = p.num;
+        var label = document.createElement("span");
+        label.className = "project-row__name";
+        label.textContent = p.name;
+        name.appendChild(num);
+        name.appendChild(label);
+
+        row.appendChild(name);
+        row.appendChild(cell(p.city));
+        row.appendChild(cell(p.category));
+        row.appendChild(cell(p.status));
+        row.appendChild(cell(p.year));
+        frag.appendChild(row);
+      });
+      rowsEl.appendChild(frag);
+      var allRows = rowsEl.querySelectorAll(".project-row");
+
+      function render() {
+        allRows.forEach(function (r, idx) {
+          r.hidden = idx >= shown;
+          r.classList.remove("is-fade");
+        });
+        var moreRemain = shown < TOTAL;
+        moreBtn.hidden = !moreRemain;
+        if (moreRemain && shown > 0) allRows[shown - 1].classList.add("is-fade");
+      }
+
+      moreBtn.addEventListener("click", function () {
+        shown = Math.min(shown + STEP, TOTAL);
+
+        if (reduce.matches) {           // no animation: reveal instantly
+          render();
+          return;
+        }
+
+        // FLIP the container height so the section visibly unrolls. Clear any
+        // in-flight lock first so the before/after heights are the natural ones.
+        rowsEl.style.height = "";
+        var startH = rowsEl.offsetHeight;   // height with the current rows
+        render();                            // reveal the next batch
+        var endH = rowsEl.offsetHeight;     // height with the new rows
+        rowsEl.style.height = startH + "px";
+        void rowsEl.offsetWidth;            // commit the start before changing it
+        rowsEl.style.height = endH + "px";  // transition up to the taller height
+      });
+
+      // Release the lock back to auto once the unroll settles, so the container
+      // stays responsive to reflow (e.g. viewport resize).
+      rowsEl.addEventListener("transitionend", function (e) {
+        if (e.propertyName === "height") rowsEl.style.height = "";
+      });
+
+      shown = Math.min(STEP, TOTAL);
+      render();
+    })();
+  </script>
+
+  <!-- Shared nav toggle + jump-menu label behaviour. -->
+  <script src="site.js"></script>
+</body>
+</html>

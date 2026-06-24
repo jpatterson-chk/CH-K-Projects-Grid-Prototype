@@ -11,7 +11,7 @@
 //
 // Per-page knobs (attributes):
 //   <site-nav reveal>                              homepage wordmark-reveal-on-scroll
-//   <site-jump base="index.html" label="Projects"> cross-page links (homepages)
+//   <site-jump base="projects.html" label="Projects"> cross-page links (homepages)
 //   <site-jump label="Selected Projects">          same-page links (projects page)
 
 (function () {
@@ -22,7 +22,7 @@
       <header class="nav${reveal ? " nav--reveal-on-scroll" : ""}" id="nav">
         <div class="nav__sizer" aria-hidden="true">CHYBIK + KRISTOF</div>
         <div class="nav__bar">
-          <p class="nav__text"><span class="nav__brand"><a class="nav__link">CHYBIK</a> <span class="m">+</span> <a class="nav__link">KRISTOF</a></span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;<a class="nav__link">ARCHITECTS</a> <span class="m">+</span> <span class="m">153</span>&nbsp;<a class="nav__link">CLIENTS</a> <span class="m">+</span> <span class="m">20</span>&nbsp;<a class="nav__link">COUNTRIES</a> <span class="m">=</span> <a class="nav__link" href="index.html"><span class="m">608</span>&nbsp;PROJECTS</a><span class="m">;</span> <span class="m">16</span>&nbsp;<a class="nav__link">INSIGHTS</a><span class="m">;</span> <span class="m">22</span>&nbsp;<a class="nav__link">UPDATES</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">PRODUCT</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">BOOK</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">JOBS</a><span class="m">;</span> <span class="m">4</span>&nbsp;<a class="nav__link">OFFICES</a><span class="m">.</span></span></p>
+          <p class="nav__text"><span class="nav__brand"><a class="nav__link">CHYBIK</a> <span class="m">+</span> <a class="nav__link">KRISTOF</a></span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;<a class="nav__link">ARCHITECTS</a> <span class="m">+</span> <span class="m">153</span>&nbsp;<a class="nav__link">CLIENTS</a> <span class="m">+</span> <span class="m">20</span>&nbsp;<a class="nav__link">COUNTRIES</a> <span class="m">=</span> <a class="nav__link" href="projects.html"><span class="m">608</span>&nbsp;PROJECTS</a><span class="m">;</span> <span class="m">16</span>&nbsp;<a class="nav__link">INSIGHTS</a><span class="m">;</span> <span class="m">22</span>&nbsp;<a class="nav__link">UPDATES</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">PRODUCT</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">BOOK</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">JOBS</a><span class="m">;</span> <span class="m">4</span>&nbsp;<a class="nav__link">OFFICES</a><span class="m">.</span></span></p>
 
           <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Toggle studio facts">
             <span class="nav__toggle-label">MENU</span>
@@ -65,7 +65,7 @@
         <nav class="footer__col footer__col--projects" aria-label="Projects">
           <h3 class="footer__heading">Projects</h3>
           <ul class="footer__links">
-            <li><a href="index.html">All Projects</a></li>
+            <li><a href="projects.html">All Projects</a></li>
             <li><a>Master-planning</a></li>
             <li><a>Sports &amp; Culture</a></li>
             <li><a>Educational</a></li>
