@@ -33,10 +33,18 @@
     var card = document.createElement("figure");
     card.className = "home-card";
 
-    // Title first so it sits ABOVE the image.
+    // Title first so it sits ABOVE the image. The project number leads, in muted
+    // grey (matching the All Projects list), followed by the title.
     var caption = document.createElement("figcaption");
     caption.className = "home-card__title";
-    caption.textContent = item.title;
+    if (item.num != null) {
+      var num = document.createElement("span");
+      num.className = "home-card__num";
+      num.textContent = item.num;
+      caption.appendChild(num);
+      caption.appendChild(document.createTextNode(" "));
+    }
+    caption.appendChild(document.createTextNode(item.title));
 
     var img = document.createElement("img");
     img.className = "home-card__img";

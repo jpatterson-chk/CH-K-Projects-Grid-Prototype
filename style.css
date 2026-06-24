@@ -690,6 +690,9 @@ site-jump { display: contents; }
 }
 .home-card:hover .home-card__title { color: var(--ck-muted); }
 
+/* Leading project number, muted grey — matches the All Projects list. */
+.home-card__num { color: var(--ck-muted); }
+
 .home-card__img {
   display: block;
   width: 100%;                            /* height follows from the ratio + column width */
