@@ -21,6 +21,10 @@ window.HOME_ORDER = [
   { file: "house-of-wine-tasting.webp",              title: "House of Wine Tasting" },
   { file: "KVIFF-TV-pavilion.webp",                  title: "KVIFF Park Pavilion" },
   { file: "manifesto-market.webp",                   title: "Manifesto Market for Urban Activation" },
+  // Full-width pull quote. Like the updates block it spans every column, so it's
+  // placed on a row boundary (a multiple of 6 cards precede it) to avoid empty
+  // cells at the 1 / 2 / 3-column breakpoints.
+  { block: "quote", text: "Transformative neighbourhoods, successful destinations, inspiring places and spaces, future heritage, and humble icons" },
   { file: "vila-park-residences.webp",               title: "Vila Park" },
   { file: "gallery-of-furniture.webp",               title: "Gallery of Furniture" },
   { file: "broadway-adaptive-tower.webp",            title: "Broadway Adaptive Tower" },

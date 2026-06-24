@@ -25,6 +25,10 @@
       frag.appendChild(buildUpdatesFeaturedBlock());
       return;
     }
+    if (item.block === "quote") {
+      frag.appendChild(buildQuoteBlock(item.text));
+      return;
+    }
 
     var card = document.createElement("figure");
     card.className = "home-card";
@@ -44,6 +48,19 @@
     frag.appendChild(card);
   });
   grid.appendChild(frag);
+
+  // --- Pull quote ------------------------------------------------------------
+
+  // A full-width studio statement, set at the hero text scale (see style.css).
+  function buildQuoteBlock(text) {
+    var section = document.createElement("section");
+    section.className = "home-quote";
+    var p = document.createElement("p");
+    p.className = "home-quote__text";
+    p.textContent = text || "";
+    section.appendChild(p);
+    return section;
+  }
 
   // --- "Updates" block (two variations share these pieces) -------------------
 

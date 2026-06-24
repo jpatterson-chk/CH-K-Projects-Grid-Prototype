@@ -833,3 +833,28 @@ site-jump { display: contents; }
 @media (min-width: 1441px) {
   .home-updates--featured { grid-template-columns: 4fr 8fr; }
 }
+
+/* ---------------------------------------------------------------------
+   Pull quote
+   A full-width studio statement dropped among the grid cards (via a
+   { block: "quote" } entry in home-order.js). Borrows the hero text scale
+   (2 / 3 / 3rem) so it reads as a large, quiet headline.
+--------------------------------------------------------------------- */
+.home-quote {
+  grid-column: 1 / -1;   /* span the full grid width, whatever the column count */
+  margin: 0;
+  padding: 48px 0;
+}
+
+.home-quote__text {
+  margin: 0;
+  font-size: 2rem;            /* 32px (→ 48px ≥641) — matches the hero scale */
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+@media (min-width: 641px) {
+  .home-quote__text { font-size: 3rem; }   /* 48px */
+}
