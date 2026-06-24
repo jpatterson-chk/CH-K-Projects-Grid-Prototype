@@ -10,11 +10,10 @@ window.HOME_ORDER = [
   { num: 416, file: "mendel-square.webp",                      title: "Mendel Square Reclaimed" },
   { num: 103, file: "waltrovka-masterplan.webp",               title: "Waltrovka 630-home Masterplan" },
   { num: 358, file: "mendel's-greenhouse.webp",                title: "Mendel's Greenhouse" },
-  // Full-width studio updates list (content in updates.js). It spans every
-  // column, so to avoid empty cells keep it on a row boundary — a multiple of 6
-  // cards lands cleanly at all breakpoints (1 / 2 / 3 columns).
-  { block: "updates" },
-  { block: "updates-featured" },   // variation B: featured update + list (stacks cleanly after block A)
+  // Full-width featured studio update + list (content in updates.js). It spans
+  // every column, so to avoid empty cells keep it on a row boundary — a multiple
+  // of 6 cards lands cleanly at all breakpoints (1 / 2 / 3 columns).
+  { block: "updates-featured" },
   { num: 272, file: "nusle-brewery-quarter.webp",              title: "Nusle Brewery Quarter" },
   // TODO: "Sugar Factory Neighbourhood" (263) — no matching image in ./images/ yet.
   { num: 275, file: "zvonarka-bus-station.webp",               title: "Zvonarka Bus Station" },
@@ -32,6 +31,9 @@ window.HOME_ORDER = [
   { num: 249, file: "forestry-HQ.webp",                        title: "Forestry HQ" },
   { num: 518, file: "learning-landscape-primary-school.webp",  title: "Primary School as Learning Landscape" },
   { num: 534, file: "multifunctional-tower-tirana.webp",       title: "Multifunctional Tower Tirana" },
+  // New featured-update variant (duplicate of updates-featured for now). Sits on
+  // a row boundary like the other full-width blocks.
+  { block: "updates-featured-2" },
   { num: 338, file: "vernacular-school-in-mulbekh.webp",       title: "Vernacular School in Mulbekh" },
   { num: 303, file: "municipal-affordable-housing.webp",       title: "Municipal Affordable Housing" },
 ];

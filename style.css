@@ -713,6 +713,7 @@ site-jump { display: contents; }
 --------------------------------------------------------------------- */
 .home-updates {
   grid-column: 1 / -1;   /* span the full grid width, whatever the column count */
+  padding: 32px 0;       /* extra vertical breathing room from the cards around it */
 }
 
 .home-updates__title {
@@ -835,6 +836,99 @@ site-jump { display: contents; }
    it 4 of 12 columns and let the list fill the other 8. */
 @media (min-width: 1441px) {
   .home-updates--featured { grid-template-columns: 4fr 8fr; }
+}
+
+/* ---------------------------------------------------------------------
+   Featured variation 2 — a duplicate of the featured block above, on its own
+   `--featured-2` / `__featured-2` namespace. Identical for now; the starting
+   point for a new layout that can diverge here without affecting variation 1.
+--------------------------------------------------------------------- */
+.home-updates__featured-2 { margin: 0 0 32px; }
+
+.home-updates__featured-2-media {
+  aspect-ratio: 3 / 2;     /* gives the image height while stacked on mobile */
+  overflow: hidden;
+}
+.home-updates__featured-2-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* fill the frame, cropping any overflow */
+}
+
+@media (min-width: 1081px) {
+  .home-updates--featured-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--page-pad-x);   /* = the home grid's gutter (24px on desktop) */
+  }
+  .home-updates--featured-2 .home-updates__title { grid-column: 1 / -1; }
+  .home-updates__featured-2 {
+    margin: 0;
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+  }
+  .home-updates__featured-2-media {
+    flex: 1 1 0;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  /* Unlike variation 1 (space-between, which leaves gaps), the rows grow to
+     equal heights so they fill the column edge-to-edge — the hover swatches
+     are then gapless. Text centres in the taller rows. "All Updates" keeps its
+     natural height and stays pinned to the bottom. The 12px side padding insets
+     the text within the swatch (the grey/divider still span the full width);
+     "All Updates" gets it too so it stays left-aligned with the rows. */
+  .home-updates--featured-2 .home-updates__row {
+    flex: 1 1 0;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .home-updates--featured-2 .home-updates__more {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (min-width: 1441px) {
+  .home-updates--featured-2 { grid-template-columns: 4fr 8fr; }
+}
+
+/* Desktop hover: the list reads as a set of swatches — non-hovered rows take the
+   jump-list grey, the hovered row clears (pairing with the JS image swap). Hover
+   + two-column width only, so touch / stacked layouts keep plain rows. */
+@media (hover: hover) and (min-width: 1081px) {
+  /* Every row and the "All Updates" link reads as a swatch: jump-list grey by
+     default, cleared on hover (rows also swap the image via JS). */
+  .home-updates--featured-2 .home-updates__row,
+  .home-updates--featured-2 .home-updates__more {
+    background-color: rgba(230, 230, 230, 0.9);   /* = ul.jump__list */
+  }
+  .home-updates--featured-2 .home-updates__row {
+    transition: background-color 0.2s ease;
+  }
+  .home-updates--featured-2 .home-updates__more {
+    transition: color 0.2s ease, background-color 0.2s ease;   /* keep the muted→black fade */
+  }
+  .home-updates--featured-2 .home-updates__row:hover,
+  .home-updates--featured-2 .home-updates__more:hover {
+    background-color: transparent;
+  }
+  /* Default selection: the featured lead row stays active (cleared) — matching
+     the default image — until the pointer enters the list and picks another row.
+     `:not(:hover)` on the column drops this the moment the list is hovered, so a
+     hovered row's own clear (above) takes over. */
+  .home-updates--featured-2 .home-updates__col:not(:hover) .home-updates__featured-2-lead {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-updates--featured-2 .home-updates__row,
+  .home-updates--featured-2 .home-updates__more { transition: none; }
 }
 
 /* ---------------------------------------------------------------------
