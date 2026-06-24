@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHYBIK + KRISTOF — Mosaic grid</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home-top.css">
+  <link rel="stylesheet" href="home-mosaic.css">
+  <script src="chrome.js"></script>
+</head>
+<body id="top">
+  <site-nav reveal></site-nav>
+
+  <main class="home">
+    <section class="hero">
+      <p class="hero__text">CHYBIK + KRISTOF is an international architecture and urban design&nbsp;practice.</p>
+    </section>
+    <section class="home-grid" id="home-grid" aria-label="Featured projects"></section>
+  </main>
+
+  <site-footer></site-footer>
+
+  <!-- Jump menu links across to the projects overview (cross-page base). -->
+  <site-jump base="index.html" label="Projects"></site-jump>
+
+  <!-- Curated featured projects (home-order.js) + studio updates (updates.js),
+       rendered by home.js. -->
+  <script src="home-order.js"></script>
+  <script src="updates.js"></script>
+  <script src="home.js"></script>
+
+  <!-- Shared nav toggle + jump-menu label behaviour. -->
+  <script src="site.js"></script>
+</body>
+</html>

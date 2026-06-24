@@ -1,0 +1,38 @@
+/* =====================================================================
+   Homepage GRID variant: MOSAIC
+   Loaded next to style.css + home-top.css on home-mosaic.html. The hero and
+   chrome are the top-aligned setup unchanged (home-top.css); this file only
+   swaps the project grid — from the uniform fluid grid to a 4-column mosaic
+   of large (2-col) and small (1-col) tiles, packed with grid-auto-flow: dense.
+
+   Mobile/tablet keep the shared uniform grid from style.css (a 4-col mosaic
+   needs real width to read), so the mosaic only kicks in at the desktop
+   breakpoint — the same 1025px boundary the uniform grid uses for 3 columns.
+   ===================================================================== */
+@media (min-width: 1025px) {
+  .home-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row dense;     /* backfill the gaps the large tiles leave */
+    row-gap: var(--page-pad-x);    /* equal row/column gaps keep the tiles square */
+  }
+
+  /* Every 3rd card is a large tile: 2 columns wide and 2 rows tall. nth-of-type
+     keys on the <figure> tag, so the interleaved <section> blocks (updates,
+     quote) don't shift the count. With this B, s, s cadence and dense packing,
+     the large tiles land on alternating sides and the small pairs fill the
+     rows between them — the staggered mosaic from the reference. */
+  .home-grid > .home-card:nth-of-type(3n + 1) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  /* Slightly landscape frames at both sizes (5/4). A large tile is two columns
+     wide and spans two rows, so it stays proportional to the small tiles and
+     the rows resolve to a consistent height. (Overrides the shared 4/5
+     portrait ratio.) */
+  .home-card__img { aspect-ratio: 5 / 4; }
+
+  /* The pull quote sits in a large-tile slot (2 columns wide) rather than
+     spanning the full width as it does in the uniform variants. */
+  .home-grid > .home-quote { grid-column: span 2; }
+}
