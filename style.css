@@ -350,7 +350,10 @@ site-jump { display: contents; }
    the grid collapses and each row flows as a single comma-separated line.
 --------------------------------------------------------------------- */
 .project-list {
-  --project-cols: minmax(0, 2.2fr) 1fr 1fr 1fr 0.8fr;
+  /* minmax(0, …) on every track lets the columns shrink below their content so
+     overflowing cell text can truncate (ellipsis) instead of forcing the track
+     wider or wrapping. */
+  --project-cols: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
   margin-top: 96px;
 }
 
@@ -396,6 +399,15 @@ site-jump { display: contents; }
   color: #000;
 }
 
+/* Each cell stays on one line and truncates with an ellipsis when it overflows
+   its column (min-width: 0 lets the grid item shrink below its content first). */
+.project-row__cell {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .project-row__num {
   margin-right: 0.5em;
   color: var(--ck-muted);
@@ -437,6 +449,10 @@ site-jump { display: contents; }
   .project-row__cell,
   .project-row__num,
   .project-row__name { display: inline; }
+
+  /* The desktop ellipsis truncation doesn't apply here — the inline cells flow
+     and wrap as one sentence. */
+  .project-row__cell { white-space: normal; overflow: visible; }
 
   /* Separators between the inline cells (desktop grid shows none). */
   .project-row__name::after { content: ", "; }
