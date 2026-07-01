@@ -197,14 +197,26 @@
     var fig = document.createElement("figure");
     fig.className = "home-updates__featured-2";
 
+    // Two stacked image layers so the hover swap can crossfade (a single <img>
+    // can't fade between two sources): the base shows the current image, the
+    // overlay fades the incoming one in over it (see wireFeatured2Hover).
     var media = document.createElement("div");
     media.className = "home-updates__featured-2-media";
-    var mediaImg = null;
+    var baseImg = null, topImg = null;
     if (defaultImg) {
-      mediaImg = document.createElement("img");
-      mediaImg.src = encodeURI(defaultImg);
-      mediaImg.alt = f.title || "";
-      media.appendChild(mediaImg);
+      baseImg = document.createElement("img");
+      baseImg.className = "home-updates__featured-2-img";
+      baseImg.src = encodeURI(defaultImg);
+      baseImg.alt = f.title || "";
+
+      topImg = document.createElement("img");
+      topImg.className = "home-updates__featured-2-img";
+      topImg.alt = "";
+      topImg.setAttribute("aria-hidden", "true");
+      topImg.style.opacity = "0";
+
+      media.appendChild(baseImg);
+      media.appendChild(topImg);
     }
     fig.appendChild(media);
     section.appendChild(fig);
@@ -235,24 +247,46 @@
       if (rowImgs[i]) rows[i].dataset.img = encodeURI(rowImgs[i]);
     }
 
-    wireFeatured2Hover(col, mediaImg, encodeURI(defaultImg));
+    wireFeatured2Hover(col, baseImg, topImg, encodeURI(defaultImg));
 
     return section;
   }
 
-  // Desktop hover: settling on an update row for 100ms swaps the featured image
-  // to that row's image; leaving the list restores the default. The debounce
-  // avoids flicker when the pointer sweeps across rows. Guarded to the two-column
-  // desktop layout (and real hover) so touch/narrow layouts are unaffected.
-  function wireFeatured2Hover(col, mediaImg, defaultSrc) {
-    if (!mediaImg) return;
+  // Desktop hover: settling on an update row for 100ms crossfades the featured
+  // image to that row's image; leaving the list restores the default. The
+  // debounce avoids flicker when the pointer sweeps across rows. Guarded to the
+  // two-column desktop layout (and real hover) so touch/narrow layouts are idle.
+  function wireFeatured2Hover(col, baseImg, topImg, defaultSrc) {
+    if (!baseImg || !topImg) return;
     var mql = window.matchMedia("(hover: hover) and (min-width: 1081px)");
     var timer;
+    var layers = [baseImg, topImg];   // baseImg visible, topImg hidden to start
+    var front = 0;                    // index of the currently-visible layer
+    var currentSrc = defaultSrc;
+
+    // Fade the hidden layer (loaded with `src`) in over the visible one, then
+    // flip which layer is front. Both layers keep their images, so there's no
+    // consolidation step to flicker; a repeat src on a layer skips the reload.
+    function crossfade(src) {
+      if (!src || src === currentSrc) return;
+      currentSrc = src;
+      var incoming = layers[1 - front];
+      var outgoing = layers[front];
+      front = 1 - front;
+
+      function reveal() {
+        void incoming.offsetWidth;      // ensure the fade runs from opacity 0
+        incoming.style.opacity = "1";
+        outgoing.style.opacity = "0";
+      }
+      if (incoming.getAttribute("src") === src) reveal();   // already loaded here
+      else { incoming.onload = reveal; incoming.src = src; }
+    }
 
     function schedule(src) {
       if (!mql.matches || !src) return;
       clearTimeout(timer);
-      timer = setTimeout(function () { mediaImg.src = src; }, 100);
+      timer = setTimeout(function () { crossfade(src); }, 100);
     }
 
     var rows = col.querySelectorAll(".home-updates__row");
