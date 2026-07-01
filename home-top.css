@@ -47,12 +47,15 @@
   font-weight: 400;
   letter-spacing: -0.01em;
   color: #000;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
-/* Hide the hero text while the menu is open/closing so the expanding facts never
-   half-cover it (the hero is pulled up under the transparent nav). Keyed off the
-   nav state from the shared <body> via :has(); only the text fades, grid stays. */
+/* Hide the hero text while the menu opens/is open/closing so the expanding facts
+   never half-cover it (the hero is pulled up under the transparent nav). Keyed
+   off the nav state from the shared <body> via :has(); only the text fades, grid
+   stays. `.is-opening` is phase 1 of the open (site.js): the hero fades here
+   FIRST, before the glass panel arrives, so it never flashes blurred behind it. */
+body:has(.nav.is-opening) .hero__text,
 body:has(.nav.is-open) .hero__text,
 body:has(.nav.is-closing) .hero__text {
   opacity: 0;

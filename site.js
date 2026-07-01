@@ -15,6 +15,13 @@
   var sizer = nav.querySelector(".nav__sizer");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var closeTimer;
+  var openTimer;
+  // The top-aligned homepage (home-top.css) pulls the hero up under the
+  // transparent nav. There, open in two phases — fade the hero out first, THEN
+  // bring in the glass panel — so the blurred hero never shows through the
+  // half-formed glass. Elsewhere (glass nav, nothing behind it) open is instant.
+  var heroUnderNav = !!document.querySelector('link[href*="home-top.css"]');
+  var OPEN_DELAY = 200;   // ≈ the hero's opacity fade in home-top.css
 
   function setAria(open) {
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -36,19 +43,47 @@
     nav.classList.remove("tagline-enter");  // fade 0 -> 1
   }
 
-  function open() {
-    clearTimeout(closeTimer);
+  // Whether this open should be sequenced (hero fades out, then the panel).
+  function sequenceOpen() {
+    return heroUnderNav &&
+           !nav.classList.contains("is-scrolled") &&   // at the top, hero visible
+           !reduce.matches;
+  }
+
+  // Phase 2 (and the immediate path): show the glass panel + studio facts.
+  function openPanel() {
+    nav.classList.remove("is-opening");
     nav.classList.remove("is-closing");
     nav.classList.add("is-open");
     // Drop any height lock a mid-close left behind so the bar grows back to
     // its full auto height. (Open itself isn't height-animated — the facts
     // just fade in over the expanded panel.)
     bar.style.height = "";
+  }
+
+  function open() {
+    clearTimeout(closeTimer);
+    clearTimeout(openTimer);
     setAria(true);
+    if (sequenceOpen()) {
+      // Phase 1: fade the hero out (.is-opening), then open the panel once it's
+      // clear. Both classes hide the hero, so the swap leaves no visible gap.
+      nav.classList.add("is-opening");
+      openTimer = setTimeout(openPanel, OPEN_DELAY);
+    } else {
+      openPanel();
+    }
   }
 
   function close() {
     setAria(false);
+    clearTimeout(openTimer);
+    // Clicked during phase 1 (the panel hasn't opened yet): just cancel it — the
+    // hero fades back in and nothing else has changed.
+    if (nav.classList.contains("is-opening") && !nav.classList.contains("is-open")) {
+      nav.classList.remove("is-opening");
+      return;
+    }
     if (reduce.matches) {             // no animation: collapse instantly
       nav.classList.remove("is-open");
       return;
@@ -65,7 +100,7 @@
   }
 
   toggle.addEventListener("click", function () {
-    if (nav.classList.contains("is-open")) close();
+    if (nav.classList.contains("is-open") || nav.classList.contains("is-opening")) close();
     else open();
   });
 
