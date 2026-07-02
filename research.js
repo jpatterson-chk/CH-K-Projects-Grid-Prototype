@@ -75,11 +75,28 @@
   var focusId = null;
 
   function center() {
-    return { x: stage.clientWidth / 2, y: stage.clientHeight * 0.46 };
+    return { x: stage.clientWidth / 2, y: stage.clientHeight * 0.47 };
   }
-  function slotRadius() {
-    var m = Math.min(stage.clientWidth, stage.clientHeight);
-    return Math.max(150, Math.min(340, m * 0.36));
+
+  // Read the current (breakpoint-dependent) neighbour size range from CSS.
+  function nodeSizeRange() {
+    var cs = getComputedStyle(stage);
+    return {
+      min: parseFloat(cs.getPropertyValue("--rnode-min")) || 88,
+      max: parseFloat(cs.getPropertyValue("--rnode-max")) || 150,
+    };
+  }
+
+  // Elliptical ring radii: horizontal bound by width, vertical by height (both
+  // leaving room for a node's half-extent). So a tall, narrow phone spreads the
+  // neighbours vertically while a wide desktop spreads them horizontally — the
+  // ring always fits without clipping.
+  function slotRadii() {
+    var r = nodeSizeRange();
+    return {
+      rx: Math.max(90, Math.min(440, stage.clientWidth / 2 - r.max * 0.6 - 16)),
+      ry: Math.max(90, Math.min(430, stage.clientHeight / 2 - r.max * 0.85 - 16)),
+    };
   }
 
   function makeNode(n) {
@@ -131,15 +148,26 @@
   // drift without letting nodes pile up.
   var links = [];
   var sim = d3.forceSimulation()
-    .force("x", d3.forceX(function (d) { return d.tx; }).strength(0.14))
-    .force("y", d3.forceY(function (d) { return d.ty; }).strength(0.14))
-    .force("charge", d3.forceManyBody().strength(-60))
+    .force("x", d3.forceX(function (d) { return d.tx; }).strength(0.32))
+    .force("y", d3.forceY(function (d) { return d.ty; }).strength(0.32))
+    .force("charge", d3.forceManyBody().strength(-10))
     .force("collide", d3.forceCollide().radius(function (d) {
       if (!d.el) return 80;
       return Math.max(d.el.offsetWidth, d.el.offsetHeight) / 2 + 12;
-    }).strength(0.95))
+    }).strength(0.9))
     .on("tick", paint)
+    .on("end", snapToTargets)
     .stop();
+
+  // When the sim cools, settle every neighbour exactly on its target slot, so
+  // the resting layout is always the clean deterministic ring regardless of how
+  // far the damped glide got.
+  function snapToTargets() {
+    sim.nodes().forEach(function (d) {
+      if (d.id !== focusId) { d.x = d.tx; d.y = d.ty; }
+    });
+    paint();
+  }
 
   // Write current node positions to the DOM. Shared by the tick loop and the
   // reduced-motion static path.
@@ -209,18 +237,38 @@
     // pull it toward. Assign targets BEFORE sim.nodes() so the forces initialise
     // with them.
     var neigh = visibleIds.filter(function (nid) { return nid !== focusId; });
-    var R = slotRadius();
+    var rad = slotRadii();
+
+    // Size each neighbour by connection strength: the most-connected reads
+    // largest, the least smallest, so the hierarchy is legible. Normalise the
+    // shared-tag scores across the current neighbours onto the CSS size range.
+    var range = nodeSizeRange();
+    var scores = neigh.map(function (nid) {
+      return score(byId[focusId], byId[nid]);
+    });
+    var sMin = Math.min.apply(null, scores);
+    var sMax = Math.max.apply(null, scores);
+
     simNodes.forEach(function (s) {
       if (s.id === focusId) {
         s.el.classList.add("is-focus");
+        s.el.style.width = "";   // let the CSS focus size apply
         s.fx = c.x; s.fy = c.y; s.tx = c.x; s.ty = c.y;
       } else {
         s.el.classList.remove("is-focus");
         s.fx = null; s.fy = null;
         var i = neigh.indexOf(s.id);
+        var norm = sMax > sMin ? (scores[i] - sMin) / (sMax - sMin) : 1;
+        s.el.style.width = (range.min + norm * (range.max - range.min)) + "px";
         var a = -Math.PI / 2 + (i / neigh.length) * Math.PI * 2;
-        s.tx = c.x + Math.cos(a) * R;
-        s.ty = c.y + Math.sin(a) * R;
+        var ux = Math.cos(a), uy = Math.sin(a);
+        s.tx = c.x + ux * rad.rx;
+        s.ty = c.y + uy * rad.ry;
+        // Start just outside the centre ON the target ray, so each neighbour
+        // eases straight out to its slot instead of trying to cross the pinned
+        // focus (whose collision would otherwise trap it on the near side).
+        s.x = c.x + ux * rad.rx * 0.3 + (Math.random() - 0.5) * 20;
+        s.y = c.y + uy * rad.ry * 0.3 + (Math.random() - 0.5) * 20;
       }
     });
 

@@ -13,15 +13,11 @@
   <site-nav></site-nav>
 
   <main class="page research">
-    <header class="research__head">
-      <h1 class="research__title">Research</h1>
-      <p class="research__lede">A web of the studio's concepts. Click any image to
-        centre it and follow its connections outward.</p>
-    </header>
-
-    <!-- The web. research.js injects .research-node figures and draws the
-         connecting lines into the <svg>; the annotation block tracks the focus. -->
+    <!-- The web fills the viewport below the nav. The title overlays its
+         top-left; research.js injects .research-node figures and draws the
+         connecting lines into the <svg>; the annotation tracks the focus. -->
     <section class="research-web" id="researchWeb" aria-label="Research web">
+      <h1 class="research__title">Research</h1>
       <svg class="research-web__links" id="researchLinks" aria-hidden="true"></svg>
       <aside class="research-annotation" id="researchNote" aria-live="polite" hidden></aside>
     </section>

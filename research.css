@@ -6,40 +6,45 @@
    simulation tick — CSS here only sizes and skins them.
 --------------------------------------------------------------------- */
 
-.research__head {
-  max-width: 720px;
-  margin-bottom: 24px;
+/* The web page drops the .page top/bottom padding so the stage can butt
+   right up under the nav and run the full height of the viewport. */
+.page.research {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
+/* Title floats over the web's top-left corner (see the mockup) instead of
+   taking layout height, so the stage gets the whole viewport. */
 .research__title {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  z-index: 3;
   margin: 0;
   font-size: 40px;
   font-weight: 400;
   line-height: 1;
   color: #000;
-}
-
-.research__lede {
-  margin: 12px 0 0;
-  max-width: 46ch;
-  font-size: var(--font-ui);
-  line-height: 1.35;
-  color: var(--ck-muted);
+  pointer-events: none;   /* clicks pass through to any node beneath */
 }
 
 /* --- The web canvas ---------------------------------------------------
-   A fixed-height stage. Nodes and lines are absolutely positioned inside
-   it and share its pixel coordinate space (origin = top-left). */
+   A full-viewport-height stage (starting just below the ~52px nav). Nodes
+   and lines are absolutely positioned inside it and share its pixel
+   coordinate space (origin = top-left). */
 .research-web {
   position: relative;
   width: 100%;
-  height: min(78vh, 720px);
-  min-height: 420px;
+  height: calc(100vh - 54px);
+  height: calc(100dvh - 54px);   /* honour mobile browser chrome where supported */
+  min-height: 480px;
   overflow: hidden;
-  /* Per-role node widths — read by research.js (offsetWidth) to size the
-     collision radius, so tuning here reflows the layout automatically. */
-  --rnode-w: 88px;
-  --rfocus-w: 150px;
+  /* Node sizing — read by research.js (offsetWidth) to size the collision
+     radius, so tuning here reflows the layout automatically. Neighbours are
+     scaled between --rnode-min and --rnode-max by connection strength. */
+  --rnode-min: 52px;
+  --rnode-max: 78px;
+  --rfocus-w: 140px;
 }
 
 /* Connection lines: thin, quiet, non-interactive. */
@@ -64,16 +69,25 @@
   top: 0;
   left: 0;
   margin: 0;
-  width: var(--rnode-w);
+  width: var(--rnode-max);   /* fallback; research.js sets a per-node width */
   cursor: pointer;
   will-change: transform;
-  /* Enter/leave fade only; position is driven by transform each tick. */
-  transition: opacity 0.4s ease;
+  /* Enter/leave fade + a gentle width ease as strength-sizing settles. */
+  transition: opacity 0.4s ease, width 0.4s ease;
 }
 
+/* Focus sizes to its image, bounded on BOTH axes so a tall portrait can't
+   dominate the stage and crowd out the neighbours. */
 .research-node.is-focus {
-  width: var(--rfocus-w);
+  width: auto;
   cursor: default;
+}
+
+.research-node.is-focus .research-node__img {
+  width: auto;
+  height: auto;
+  max-width: var(--rfocus-w);
+  max-height: 48vh;
 }
 
 /* Newly added / departing neighbours fade via this hook. */
@@ -143,12 +157,12 @@
 
 /* --- Breakpoints: grow the nodes with the viewport ------------------- */
 @media (min-width: 641px) {
-  .research-web { --rnode-w: 110px; --rfocus-w: 220px; }
+  .research-web { --rnode-min: 84px; --rnode-max: 150px; --rfocus-w: 320px; }
   .research__title { font-size: 56px; }
 }
 
 @media (min-width: 1025px) {
-  .research-web { --rnode-w: 130px; --rfocus-w: 280px; }
+  .research-web { --rnode-min: 96px; --rnode-max: 184px; --rfocus-w: 420px; }
 }
 
 /* --- Reduced motion: no fades or line easing; instant placement ------ */
