@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Research</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="research.css">
+  <script src="chrome.js"></script>
+</head>
+<body id="top">
+  <site-nav></site-nav>
+
+  <main class="page research">
+    <header class="research__head">
+      <h1 class="research__title">Research</h1>
+      <p class="research__lede">A web of the studio's concepts. Click any image to
+        centre it and follow its connections outward.</p>
+    </header>
+
+    <!-- The web. research.js injects .research-node figures and draws the
+         connecting lines into the <svg>; the annotation block tracks the focus. -->
+    <section class="research-web" id="researchWeb" aria-label="Research web">
+      <svg class="research-web__links" id="researchLinks" aria-hidden="true"></svg>
+      <aside class="research-annotation" id="researchNote" aria-live="polite" hidden></aside>
+    </section>
+  </main>
+
+  <site-footer></site-footer>
+
+  <!-- Cross-page jump menu (links back to the projects page). -->
+  <site-jump base="projects.html" label="Research"></site-jump>
+
+  <!-- Hand-editable node/tag data (see the file header). -->
+  <script src="research-data.js"></script>
+
+  <!-- Vendored d3-force + its deps (offline, no CDN). Load order matters:
+       dispatch / quadtree / timer attach to the global d3 that force reads. -->
+  <script src="vendor/d3-dispatch.min.js"></script>
+  <script src="vendor/d3-quadtree.min.js"></script>
+  <script src="vendor/d3-timer.min.js"></script>
+  <script src="vendor/d3-force.min.js"></script>
+
+  <!-- The web engine: similarity, focus/re-centre, force layout. -->
+  <script src="research.js"></script>
+
+  <!-- Shared nav toggle + jump-menu label behaviour. -->
+  <script src="site.js"></script>
+</body>
+</html>

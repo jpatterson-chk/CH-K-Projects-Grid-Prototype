@@ -57,6 +57,7 @@
             <li><a>Awards</a></li>
             <li><a>Exhibitions</a></li>
             <li><a>Lectures</a></li>
+            <li><a href="research.html">Research</a></li>
             <li><a>Careers</a></li>
             <li><a>Contact</a></li>
           </ul>
