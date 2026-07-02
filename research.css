@@ -87,7 +87,7 @@
   width: auto;
   height: auto;
   max-width: var(--rfocus-w);
-  max-height: 48vh;
+  max-height: 42vh;
 }
 
 /* Newly added / departing neighbours fade via this hook. */

@@ -87,16 +87,46 @@
     };
   }
 
-  // Elliptical ring radii: horizontal bound by width, vertical by height (both
-  // leaving room for a node's half-extent). So a tall, narrow phone spreads the
-  // neighbours vertically while a wide desktop spreads them horizontally — the
-  // ring always fits without clipping.
-  function slotRadii() {
-    var r = nodeSizeRange();
-    return {
-      rx: Math.max(90, Math.min(440, stage.clientWidth / 2 - r.max * 0.6 - 16)),
-      ry: Math.max(90, Math.min(430, stage.clientHeight / 2 - r.max * 0.85 - 16)),
-    };
+  // Assign every visible node its target: the focus to the centre, each
+  // neighbour to a slot on an elliptical ring. The ring radii are derived from
+  // the focus's ACTUAL measured size so neighbours always clear it with a gap
+  // (no more top/bottom nodes landing on the focus), capped by the stage so they
+  // never clip. Angles are organic — a per-focus rotation plus bounded jitter —
+  // rather than rigid 90° cardinals. Returns each neighbour's unit direction so
+  // callers can seed entering nodes on the same ray. Does not touch x/y.
+  function assignTargets(c) {
+    var neigh = (neighborIds[focusId] || []).filter(function (nid) { return simById[nid]; });
+    var range = nodeSizeRange();
+    // Focus half-extents. Once the focus image has decoded, use its real box;
+    // before then (first load) fall back to the CSS max-bounds (--rfocus-w wide,
+    // 42vh tall) so the ring is sized generously enough to clear ANY image
+    // without waiting on a load event.
+    var fEl = simById[focusId].el;
+    var fImg = fEl.querySelector(".research-node__img");
+    var loaded = fImg && fImg.complete && fImg.naturalWidth;
+    var rfw = parseFloat(getComputedStyle(stage).getPropertyValue("--rfocus-w")) || 200;
+    var maxFH = 0.42 * (window.innerHeight || stage.clientHeight);
+    var fHW = loaded ? fEl.offsetWidth / 2 : rfw / 2;
+    var fHH = loaded ? fEl.offsetHeight / 2 : maxFH / 2;
+    var nHW = range.max / 2, nHH = range.max * 0.62, gap = 60;
+    var rx = Math.max(120, Math.min(fHW + nHW + gap, stage.clientWidth / 2 - nHW - 12));
+    var ry = Math.max(120, Math.min(fHH + nHH + gap, stage.clientHeight / 2 - nHH - 12));
+
+    simById[focusId].tx = c.x;
+    simById[focusId].ty = c.y;
+
+    var rng = makeRng(hashStr(focusId));
+    var rot = rng() * Math.PI * 2;
+    var seg = (Math.PI * 2) / Math.max(1, neigh.length);
+    var dirs = {};
+    neigh.forEach(function (nid, i) {
+      var a = rot + i * seg + (rng() - 0.5) * seg * 0.7;
+      var ux = Math.cos(a), uy = Math.sin(a);
+      simById[nid].tx = c.x + ux * rx;
+      simById[nid].ty = c.y + uy * ry;
+      dirs[nid] = { ux: ux, uy: uy };
+    });
+    return { rx: rx, ry: ry, dirs: dirs };
   }
 
   function makeNode(n) {
@@ -110,8 +140,17 @@
     img.className = "research-node__img";
     img.src = "images/" + n.file;
     img.alt = n.title;
-    // Images load after layout; re-centre once the real height is known.
-    img.addEventListener("load", paint);
+    // Images load after layout. When the FOCUS image arrives its real height is
+    // finally known, so re-lay the ring off it (fixes the first-load case where
+    // the focus measured tiny before its image decoded); otherwise just repaint.
+    img.addEventListener("load", function () {
+      if (n.id === focusId && !reduce.matches) {
+        assignTargets(center());
+        sim.alpha(Math.max(sim.alpha(), 0.4)).restart();
+      } else {
+        paint();
+      }
+    });
 
     var cap = document.createElement("figcaption");
     cap.className = "research-node__title";
@@ -140,39 +179,48 @@
     return ln;
   }
 
+  // Deterministic pseudo-random from a string, so each focus gets its own stable
+  // ring rotation + per-node jitter (organic angles that don't shuffle on reload).
+  function hashStr(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i); h = (h * 16777619) >>> 0;
+    }
+    return h;
+  }
+  function makeRng(seed) {
+    var s = seed >>> 0;
+    return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  }
+
   // --- Simulation ------------------------------------------------------------
-  // Each neighbour is given a target radial slot (d.tx/d.ty); forceX/forceY pull
-  // it there so re-centring animates as a smooth glide, while a size-aware
-  // collision keeps the (portrait) images from overlapping. Lines are drawn by
-  // hand in paint(), so no link force is needed. A little charge adds organic
-  // drift without letting nodes pile up.
+  // Every node is pulled toward a target (the focus toward the centre, each
+  // neighbour toward its ring slot) by forceX/forceY. The focus is pulled harder
+  // so it glides in and holds the middle WITHOUT a hard fx/fy pin — that lets a
+  // clicked neighbour animate into the centre instead of teleporting. A firm
+  // velocityDecay damps the motion so nodes ease to rest with no overshoot (so no
+  // snap-back). Collision only nudges neighbours apart; the ring radii are sized
+  // to clear the focus geometrically. Lines are drawn by hand in paint().
   var links = [];
   var sim = d3.forceSimulation()
-    .force("x", d3.forceX(function (d) { return d.tx; }).strength(0.32))
-    .force("y", d3.forceY(function (d) { return d.ty; }).strength(0.32))
-    .force("charge", d3.forceManyBody().strength(-10))
+    .velocityDecay(0.55)
+    .force("x", d3.forceX(function (d) { return d.tx; })
+      .strength(function (d) { return d.id === focusId ? 0.45 : 0.22; }))
+    .force("y", d3.forceY(function (d) { return d.ty; })
+      .strength(function (d) { return d.id === focusId ? 0.45 : 0.22; }))
+    .force("charge", d3.forceManyBody().strength(-12))
     .force("collide", d3.forceCollide().radius(function (d) {
-      if (!d.el) return 80;
-      return Math.max(d.el.offsetWidth, d.el.offsetHeight) / 2 + 12;
-    }).strength(0.9))
+      if (!d.el) return 70;
+      // Average of half-width and half-height: firm enough to separate
+      // neighbours without a tall portrait's huge circle shoving them off-ring.
+      return (d.el.offsetWidth + d.el.offsetHeight) / 4 + 8;
+    }).strength(0.7))
     .on("tick", paint)
-    .on("end", snapToTargets)
     .stop();
-
-  // When the sim cools, settle every neighbour exactly on its target slot, so
-  // the resting layout is always the clean deterministic ring regardless of how
-  // far the damped glide got.
-  function snapToTargets() {
-    sim.nodes().forEach(function (d) {
-      if (d.id !== focusId) { d.x = d.tx; d.y = d.ty; }
-    });
-    paint();
-  }
 
   // Write current node positions to the DOM. Shared by the tick loop and the
   // reduced-motion static path.
   function paint() {
-    var c = center();
     sim.nodes().forEach(function (d) {
       var hw = d.el.offsetWidth / 2, hh = d.el.offsetHeight / 2;
       if (d.id !== focusId) {
@@ -186,9 +234,6 @@
       lk.line.setAttribute("x1", s.x); lk.line.setAttribute("y1", s.y);
       lk.line.setAttribute("x2", t.x); lk.line.setAttribute("y2", t.y);
     });
-    // Keep the focus centred even if a resize moved the middle.
-    var f = simById[focusId];
-    if (f) { f.fx = c.x; f.fy = c.y; }
   }
 
   // --- Focus / re-centre -----------------------------------------------------
@@ -214,62 +259,50 @@
     });
 
     // Build the visible sim nodes, reusing prior positions for continuity.
+    // Track which are newly entering this transition (they get seeded on their
+    // ray below; persisting nodes keep their position and simply glide over).
+    var neigh = visibleIds.filter(function (nid) { return nid !== focusId; });
+    var entering = {};
     var simNodes = visibleIds.map(function (nid) {
       var s = simById[nid];
-      if (!s) {
-        s = simById[nid] = { id: nid, x: c.x, y: c.y };
-      }
-      // Revive a node that was mid-leave.
+      if (!s) { s = simById[nid] = { id: nid, x: c.x, y: c.y }; }
       clearTimeout(leaveTimers[nid]);
       var el = elById[nid];
-      if (!el) {
-        el = elById[nid] = makeNode(byId[nid]);
-        s.x = c.x + (Math.random() - 0.5) * 60;   // start near centre, then spread
-        s.y = c.y + (Math.random() - 0.5) * 60;
-      }
+      if (!el) { el = elById[nid] = makeNode(byId[nid]); entering[nid] = true; }
       el.classList.remove("is-leaving");
       s.el = el;
+      s.fx = null; s.fy = null;   // no hard pin — targets do the positioning
       return s;
     });
 
-    // Roles + target slots. The focus pins to the centre + scales up; each
-    // neighbour gets an evenly-spaced slot on a ring, which forceX/forceY then
-    // pull it toward. Assign targets BEFORE sim.nodes() so the forces initialise
-    // with them.
-    var neigh = visibleIds.filter(function (nid) { return nid !== focusId; });
-    var rad = slotRadii();
-
-    // Size each neighbour by connection strength: the most-connected reads
-    // largest, the least smallest, so the hierarchy is legible. Normalise the
-    // shared-tag scores across the current neighbours onto the CSS size range.
+    // Roles + per-neighbour size (by connection strength) FIRST, so the focus
+    // reports its real bounded size before we measure it to lay out the ring.
     var range = nodeSizeRange();
-    var scores = neigh.map(function (nid) {
-      return score(byId[focusId], byId[nid]);
-    });
+    var scores = neigh.map(function (nid) { return score(byId[focusId], byId[nid]); });
     var sMin = Math.min.apply(null, scores);
     var sMax = Math.max.apply(null, scores);
-
     simNodes.forEach(function (s) {
       if (s.id === focusId) {
         s.el.classList.add("is-focus");
         s.el.style.width = "";   // let the CSS focus size apply
-        s.fx = c.x; s.fy = c.y; s.tx = c.x; s.ty = c.y;
       } else {
         s.el.classList.remove("is-focus");
-        s.fx = null; s.fy = null;
         var i = neigh.indexOf(s.id);
         var norm = sMax > sMin ? (scores[i] - sMin) / (sMax - sMin) : 1;
         s.el.style.width = (range.min + norm * (range.max - range.min)) + "px";
-        var a = -Math.PI / 2 + (i / neigh.length) * Math.PI * 2;
-        var ux = Math.cos(a), uy = Math.sin(a);
-        s.tx = c.x + ux * rad.rx;
-        s.ty = c.y + uy * rad.ry;
-        // Start just outside the centre ON the target ray, so each neighbour
-        // eases straight out to its slot instead of trying to cross the pinned
-        // focus (whose collision would otherwise trap it on the near side).
-        s.x = c.x + ux * rad.rx * 0.3 + (Math.random() - 0.5) * 20;
-        s.y = c.y + uy * rad.ry * 0.3 + (Math.random() - 0.5) * 20;
       }
+    });
+
+    // Targets (focus -> centre, neighbours -> organic ring sized off the focus).
+    var layout = assignTargets(c);
+    // Seed only the entering neighbours, just outside the centre on their ray,
+    // so they fan outward. Persisting neighbours (and the clicked node, which is
+    // now the focus) keep their current position and glide to the new target.
+    neigh.forEach(function (nid) {
+      if (!entering[nid]) return;
+      var d = layout.dirs[nid], s = simById[nid];
+      s.x = c.x + d.ux * layout.rx * 0.35 + (Math.random() - 0.5) * 16;
+      s.y = c.y + d.uy * layout.ry * 0.35 + (Math.random() - 0.5) * 16;
     });
 
     // Lines: focus -> each neighbour (node-object refs, reused by paint()).
@@ -282,7 +315,7 @@
     sim.nodes(simNodes);
 
     if (reduce.matches) {
-      // Jump straight to the target slots, no animation.
+      // Jump straight to the targets, no animation.
       simNodes.forEach(function (s) { s.x = s.tx; s.y = s.ty; });
       sim.stop();
       paint();
