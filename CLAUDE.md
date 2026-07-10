@@ -10,42 +10,43 @@ All project card images are located in the `./images/` folder. Each card should 
 
 ## Grid container (`.module-archive`)
 
-The grid container uses CSS custom properties to control its behavior. The core declaration is:
+The grid container lets the browser choose the column count, and the slack between column jumps lands in the **column gap** (bounded by a `clamp()`), not in the outer margins. The core declaration is:
 
 ```css
 .module-archive {
+  --card-min: 160px;   /* min card width; past it, a new column drops in */
+  --gap-min: 16px;     /* column-gap floor */
+  --gap-max: 72px;     /* column-gap ceiling */
+  --archive-row-gap: 96px;
+
   display: grid;
-  grid-template-columns: repeat(var(--module-archive-cols), var(--archive-card-w));
-  gap: var(--archive-card-gap) var(--module-archive-gap);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  column-gap: clamp(var(--gap-min), 4%, var(--gap-max));
+  row-gap: var(--archive-row-gap);
   align-items: start;
 }
 ```
 
-This is NOT an `auto-fill` / `auto-fit` grid. The column count is **explicitly set** via the `--module-archive-cols` variable at each breakpoint, and the card width is a **fixed value** set via `--archive-card-w`. The grid is then horizontally centered within its container via `justify-content: center`. The remaining horizontal space is consumed by the column gap (`--module-archive-gap`), which is also a fixed value per breakpoint — not a fluid `minmax()` range.
+Key idea: leftover width can only go to the **cards**, the **gaps**, or the **outer margins**. Cards are `1fr` so they fill the row — that eliminates the outer margins (the grid spans the full content width). The column gap is then the element that flexes, but `clamp()` holds it between `--gap-min` and `--gap-max` so it can't balloon. `auto-fill` still drops in a new column once there's room for one at `--card-min`. Because the clamped gap absorbs most of the width growth, the cards stay near `--card-min` and read as fixed-size. Use `auto-fill` (not `auto-fit`) so a short final row stays left-aligned instead of stretching full width.
 
-The row gap (`--archive-card-gap`) controls vertical spacing between rows of cards.
+Tuning is a few knobs, not a breakpoint table:
+- **`--gap-min` / `--gap-max`** — the gap's floor and ceiling; the `4%` middle term is the preferred gap as a share of container width (raise it for roomier gaps that hit the max sooner).
+- **`--card-min`** — smaller = more, narrower columns; larger = fewer, wider columns.
 
 ## Breakpoint system
 
-The layout uses a mobile-first approach with these breakpoints. Implement all of them:
+The grid itself needs **no per-viewport column breakpoints** — `auto-fill` handles column count and the `clamp()` handles the gap. The only overrides are:
 
-| Viewport width | `--module-archive-cols` | `--archive-card-w` | `--module-archive-gap` | `--archive-card-gap` |
-|---|---|---|---|---|
-| ≤ 640px | 2 | 130px | 16px | 16px |
-| 641px – 1024px | 3 | 150px | 30px | 20px |
-| 1025px – 1280px | 4 | 130px | 20px | 20px |
-| 1281px – 1440px | 4 | 160px | 60px | 20px |
-| 1441px – 1680px | 5 | 160px | 80px | 20px |
-| > 1680px | 5 | 180px | 90px | 20px |
+- **≤ 640px (mobile):** `--card-min: 130px` so two cards comfortably fit a phone (the desktop min is too wide). The clamped gap already collapses toward `--gap-min` on narrow screens, so no gap override is needed.
+- **`.page` padding** still steps up with the viewport (56 → 64 → 72px) independently of the grid.
 
-These values are approximate and tuned to produce a visually similar result to the reference site. Adjust if needed to look right, but the core principle is: **column count and card width are fixed per breakpoint, not fluid**.
+Historical note: the first version fixed the column count and card width per breakpoint and let `justify-content: space-between` pour slack into the gaps — that ballooned the gaps at wide widths. The second version (`auto-fill` + fixed gap + `justify-content: center`) fixed the gaps but pushed the slack into flexing outer margins. The current version pins the cards (`1fr` fill) and lets the **gap** flex within a `clamp()`. Do not reintroduce fixed per-breakpoint column counts or `justify-content: center` here.
 
 ## Card component (`.archive-card`)
 
 Each card consists of:
 
-1. **An image** — displayed at the width dictated by `--archive-card-w`. The image should maintain its natural aspect ratio (use `width: 100%; height: auto;`). Images on the reference site are predominantly portrait-oriented (roughly 4:5 or 3:4 ratio) but some are landscape or square — the grid accommodates mixed aspect ratios with `align-items: start` on the container so cards anchor to the top of their row.
+1. **An image** — displayed at the width of its grid track (at least `--card-min`, then `1fr`-filled). The image should maintain its natural aspect ratio (use `width: 100%; height: auto;`). Images on the reference site are predominantly portrait-oriented (roughly 4:5 or 3:4 ratio) but some are landscape or square — the grid accommodates mixed aspect ratios with `align-items: start` on the container so cards anchor to the top of their row.
 2. **A project title** — a short text label below the image. Styled small, muted, minimal — think 11–12px, light grey or similar understated treatment. Use the image filename (without extension, dashes/underscores replaced with spaces) as the title if no other data is available.
 
 Cards have **no border, no background, no shadow, no hover card-lift effect**. The design is extremely minimal. On hover, the only effect on the reference site is a subtle opacity reduction on the image (e.g., `opacity: 0.7` on hover with a short transition).

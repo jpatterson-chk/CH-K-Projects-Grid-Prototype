@@ -49,75 +49,49 @@ site-jump { display: contents; }
 
 /* ---------------------------------------------------------------------
    Grid container
-   Column count and card width are FIXED per breakpoint (not auto-fit /
-   minmax). The grid fills the full content width; `space-between`
-   distributes the leftover horizontal space into the column gaps, so the
-   gutters grow and shrink with the viewport while card width stays fixed.
-   (Exception: the widescreen breakpoint sizes cards in vw — see below.)
+   The browser chooses the column count via `auto-fill`, and the slack
+   between column jumps lands in the COLUMN GAP (bounded), not in the
+   outer margins.
+
+   Leftover width can only go to one of three places: the cards, the gap,
+   or the outer margins. Cards are set to 1fr so they fill the row — that
+   removes the outer margins (the grid spans the full content width). The
+   column gap is then the thing that flexes, but clamped between --gap-min
+   and --gap-max so it can't balloon. A new column still drops in once
+   there's room for one at --card-min.
+
+   Knobs:
+     --card-min          min card width; past it, a column drops in
+     --gap-min/--gap-max the gap's floor and ceiling; the 4% middle term
+                         is the preferred gap (a share of container width)
+   Because the clamped gap absorbs most of the width growth, cards stay
+   near --card-min and read as fixed-size. auto-fill (not auto-fit) keeps
+   a short final row left-aligned instead of stretching it full width.
 --------------------------------------------------------------------- */
 .module-archive {
-  /* Defaults = smallest breakpoint (<= 640px). Overridden below. */
-  --module-archive-cols: 2;
-  --archive-card-w: 155px;
-  --archive-card-gap: 96px;    /* row gap */
+  --card-min: 160px;
+  --gap-min: 16px;
+  --gap-max: 72px;
+  --archive-row-gap: 96px;     /* gap between rows (stays fixed) */
 
   display: grid;
-  grid-template-columns: repeat(var(--module-archive-cols), var(--archive-card-w));
-  row-gap: var(--archive-card-gap);
-  column-gap: 16px;            /* minimum gap; space-between adds more on wider viewports */
-  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  column-gap: clamp(var(--gap-min), 4%, var(--gap-max));
+  row-gap: var(--archive-row-gap);
   align-items: start;
 }
 
-/* 641px – 1024px */
-@media (min-width: 641px) {
-  .module-archive {
-    --module-archive-cols: 3;
-    --archive-card-w: 160px;
-    --archive-card-gap: 96px;
-  }
-  .page { padding: 56px var(--page-pad-x); }
+/* Mobile: smaller cards so two comfortably fit a phone. The clamped gap
+   already collapses toward --gap-min on narrow screens, so no gap override. */
+@media (max-width: 640px) {
+  .module-archive { --card-min: 130px; }
 }
 
-/* 1025px – 1280px */
-@media (min-width: 1025px) {
-  .module-archive {
-    --module-archive-cols: 4;
-    --archive-card-w: 160px;
-    --archive-card-gap: 96px;
-  }
-  .page { padding: 64px var(--page-pad-x); }
-}
-
-/* 1281px – 1440px */
-@media (min-width: 1281px) {
-  .module-archive {
-    --module-archive-cols: 4;
-    --archive-card-w: 192px;
-    --archive-card-gap: 96px;
-  }
-  .page { padding: 72px var(--page-pad-x); }
-}
-
-/* 1441px – 1680px */
-@media (min-width: 1441px) {
-  .module-archive {
-    --module-archive-cols: 5;
-    --archive-card-w: 15vw;
-    --archive-card-gap: 96px;
-  }
-  .page { padding: 64px var(--page-pad-x) 24px; }
-}
-
-/* > 1680px */
-@media (min-width: 1681px) {
-  .module-archive {
-    --module-archive-cols: 5;
-    --archive-card-w: 12vw;      /* scale cards with the viewport on very wide screens */
-    --archive-card-gap: 96px;
-  }
-  .page { padding: 64px var(--page-pad-x) 24px; }
-}
+/* Page padding still steps up with the viewport (independent of the grid). */
+@media (min-width: 641px)  { .page { padding: 56px var(--page-pad-x); } }
+@media (min-width: 1025px) { .page { padding: 64px var(--page-pad-x); } }
+@media (min-width: 1281px) { .page { padding: 72px var(--page-pad-x); } }
+@media (min-width: 1441px) { .page { padding: 64px var(--page-pad-x) 24px; } }
 
 /* ---------------------------------------------------------------------
    Card — no border, background, shadow, or lift. Just image + title.
@@ -145,6 +119,12 @@ site-jump { display: contents; }
   letter-spacing: 0.01em;
   color: #000;
   transition: color 0.2s ease;
+}
+
+/* Project code prefix — muted grey, like the .project-row__num in the list. */
+.archive-card__num {
+  margin-right: 0.5em;
+  color: var(--ck-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
