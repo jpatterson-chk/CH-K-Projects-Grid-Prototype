@@ -4,14 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Projects</title>
+  <title>CHYBIK + KRISTOF — Centered hero + archive</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Reuse the centered hero band, then trim the page's top padding so it sits
+       right under the nav (see home-archive.css). -->
+  <link rel="stylesheet" href="home-centered.css">
+  <link rel="stylesheet" href="home-archive.css">
   <script src="chrome.js"></script>
 </head>
 <body id="top">
-  <site-nav></site-nav>
+  <site-nav reveal></site-nav>
 
   <main class="page">
+    <!-- Centered hero band (home-centered.css), above the projects archive. -->
+    <section class="hero">
+      <p class="hero__text">CHYBIK + KRISTOF is an international architecture and urban design practice.</p>
+    </section>
+
+    <!-- Projects overview format, identical to projects.html below here. -->
     <section class="module-archive" id="archive" aria-label="Projects"></section>
 
     <section class="project-list" id="projects" aria-label="Project list">
@@ -32,12 +42,11 @@
   <site-jump label="Selected Projects"></site-jump>
 
   <!-- Generated list of filenames in ./images/ (see generate-manifest.sh),
-       then the shared archive-grid renderer (also used by home-archive.html). -->
+       then the shared archive-grid renderer. -->
   <script src="manifest.js"></script>
   <script src="archive.js"></script>
 
-  <!-- Project-list data + its shared renderer (also used by home-archive.html):
-       every row is built up front, then revealed 10 at a time. -->
+  <!-- Project-list data + its shared renderer. -->
   <script src="projects.js"></script>
   <script src="project-list.js"></script>
 

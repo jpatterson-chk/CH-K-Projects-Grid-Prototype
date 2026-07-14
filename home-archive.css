@@ -1,0 +1,14 @@
+/* =====================================================================
+   Homepage layout variant: CENTERED hero + PROJECTS archive (hybrid)
+   Loaded on home-archive.html next to style.css and home-centered.css.
+
+   This page reuses the projects-overview layout wholesale (.page, the
+   .module-archive grid, and the .project-list) and drops the centered hero
+   band (from home-centered.css) on top of it. The only thing this file adds
+   is removing the page's top padding so the hero fills the half-screen band
+   directly beneath the nav — the way it does on home-centered.html — instead
+   of starting lower down. The hero's own margin-bottom handles the gap down
+   to the grid.
+   ===================================================================== */
+
+.page { padding-top: 0; }
