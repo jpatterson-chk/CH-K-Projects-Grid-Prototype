@@ -1,0 +1,71 @@
+/* =====================================================================
+   Homepage GRID variant: MOSAIC 2  (fork of home-mosaic.css)
+   Loaded next to style.css + home-top.css on home-mosaic-2.html. The hero and
+   chrome are the top-aligned setup unchanged (home-top.css); this file swaps the
+   project grid.
+
+   Unlike the original mosaic, images are NOT cropped to a fixed frame. Each
+   image keeps its natural, uncropped aspect ratio: the tile WIDTH (2 columns for
+   a large tile, 1 for a small one) sets its size, and the height simply follows.
+   Cards are top-aligned, so where an image is shorter than its neighbours the
+   extra whitespace falls BELOW it rather than cropping or stretching the image.
+   ===================================================================== */
+
+/* Natural, uncropped images at every breakpoint on this variant — the tile
+   width drives the size, height follows. (Overrides the shared 4/5 cover crop.) */
+.home-card__img {
+  aspect-ratio: auto;
+  height: auto;
+}
+
+/* Top-align every card so a short image leaves whitespace beneath it instead of
+   stretching to match the tallest card in its row. */
+.home-grid { align-items: start; }
+
+/* Desktop mosaic: a 4-column grid where every 3rd card is a large tile — twice
+   as WIDE (but no longer a fixed two rows tall, since heights are now natural).
+   Mobile/tablet keep the shared uniform grid from style.css. */
+@media (min-width: 1025px) {
+  .home-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row dense;     /* backfill any gaps the wide tiles leave */
+    row-gap: var(--page-pad-x);    /* keep the current vertical gap between rows */
+  }
+
+  /* Large tile: 2 columns wide. Its width sets its size; the natural image
+     height determines how tall it is. */
+  .home-grid > .home-card:nth-of-type(3n + 1) {
+    grid-column: span 2;
+  }
+
+  /* Alternate the large tiles left / right so they read as evenly distributed,
+     while the pull-quote row keeps its image on the RIGHT (quote text on the
+     left). Left to itself the dense flow stacks every pre-quote large tile on the
+     left and every post-quote one on the right; the nudges below flip every
+     second large tile to the opposite side, giving L R L R (R) L R.
+
+     Two different mechanisms are needed because dense packing is asymmetric: a
+     large tile can be pushed RIGHT — the small tiles that follow it in source
+     order simply backfill the space to its left — but it cannot be pushed left
+     the same way, because the small tiles before it already hold the left. So to
+     send a large tile LEFT we instead push its two preceding small tiles to the
+     right-hand columns and let the large backfill the space they vacate.
+
+     NOTE: the child indices below are tuned to the current HOME_ORDER cadence
+     (its card count and where the full-width updates / 2-col quote blocks fall).
+     If that order changes, re-derive them by inspecting the rendered grid
+     positions (getBoundingClientRect left/top of each #home-grid child). */
+
+  /* Mendel Square (4th card) and House of Wine (10th) → right. */
+  .home-grid > .home-card:nth-of-type(4),
+  .home-grid > .home-card:nth-of-type(10) { grid-column: 3 / span 2; }
+
+  /* Forestry (16th) → left, by sending its two preceding small tiles
+     (Gallery 14th, Broadway 15th) to the right-hand columns so it backfills. */
+  .home-grid > .home-card:nth-of-type(14) { grid-column: 3; }
+  .home-grid > .home-card:nth-of-type(15) { grid-column: 4; }
+
+  /* The pull quote sits in a 2-column slot, on the LEFT — its large-tile
+     neighbour (Vila Park) fills the right, per the rule above. */
+  .home-grid > .home-quote { grid-column: span 2; }
+}

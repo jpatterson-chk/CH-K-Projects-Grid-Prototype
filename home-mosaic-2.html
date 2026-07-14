@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>CHYBIK + KRISTOF — Mosaic grid 2</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home-centered.css">
+  <link rel="stylesheet" href="home-mosaic-2.css">
+  <script src="chrome.js"></script>
+</head>
+<body id="top">
+  <site-nav reveal></site-nav>
+
+  <main class="home">
+    <section class="hero">
+      <p class="hero__text">CHYBIK + KRISTOF is an international architecture and urban design&nbsp;practice.</p>
+    </section>
+    <section class="home-grid" id="home-grid" aria-label="Featured projects"></section>
+
+    <!-- Full text-only project list above the footer (shared with projects.html
+         via project-list.js): every row built up front, revealed 10 at a time. -->
+    <section class="project-list" id="projects" aria-label="Project list">
+      <header class="project-list__head">
+        <h2 class="project-list__title">Projects</h2>
+        <div class="project-list__labels" aria-hidden="true">
+          <span>City</span><span>Category</span><span>Status</span><span>Year</span>
+        </div>
+      </header>
+      <div class="project-list__rows" id="projectRows"></div>
+      <button class="project-list__more" id="projectMore" type="button">View More +</button>
+    </section>
+  </main>
+
+  <site-footer></site-footer>
+
+  <!-- Jump menu links across to the projects overview (cross-page base). -->
+  <site-jump base="projects.html" label="Projects"></site-jump>
+
+  <!-- Curated featured projects (variant-specific home-order-mosaic-2.js) +
+       studio updates (updates.js), rendered by home.js. This variant loads its
+       project-card images from a dedicated folder (uncropped, variety of aspect
+       ratios) instead of the shared images/ set — set before home.js reads it. -->
+  <script>window.HOME_IMAGE_BASE = "images-mosaic-2/";</script>
+  <script src="home-order-mosaic-2.js"></script>
+  <script src="updates.js"></script>
+  <script src="home.js"></script>
+
+  <!-- Project-list data + its shared renderer (also used by projects.html). -->
+  <script src="projects.js"></script>
+  <script src="project-list.js"></script>
+
+  <!-- Shared nav toggle + jump-menu label behaviour. -->
+  <script src="site.js"></script>
+</body>
+</html>

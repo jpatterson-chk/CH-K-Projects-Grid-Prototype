@@ -6,6 +6,12 @@
   var items = window.HOME_ORDER || [];
   if (!grid) return;
 
+  // Folder the project-card images load from. Defaults to images/; a variant can
+  // point at its own set (e.g. uncropped photos for the mosaic-2 grid) by setting
+  // window.HOME_IMAGE_BASE before this script runs. Only the project cards use it
+  // — the updates blocks keep their own images/ + images/updates/ assets.
+  var IMG_BASE = window.HOME_IMAGE_BASE || "images/";
+
   if (!items.length) {
     grid.innerHTML =
       '<p class="archive-empty">No projects listed. Add entries to ' +
@@ -48,7 +54,7 @@
 
     var img = document.createElement("img");
     img.className = "home-card__img";
-    img.src = "images/" + item.file;
+    img.src = IMG_BASE + item.file;
     img.alt = item.title;
 
     card.appendChild(caption);
