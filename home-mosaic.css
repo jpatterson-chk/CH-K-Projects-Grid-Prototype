@@ -32,7 +32,17 @@
      portrait ratio.) */
   .home-card__img { aspect-ratio: 5 / 4; }
 
-  /* The pull quote sits in a large-tile slot (2 columns wide) rather than
-     spanning the full width as it does in the uniform variants. */
-  .home-grid > .home-quote { grid-column: span 2; }
+  /* The pull quote is a full-width feature (image beside the statement, styled in
+     style.css). Spanning every column, it cleanly resets the row, so each 6-card
+     section between the full-width blocks packs as a clean staggered unit — no
+     lone-large / 2x2-small-cluster. (It uses the base .home-quote full width; no
+     mosaic override needed.) */
+
+  /* The quote's image sits in the right half of the full-width block — the same
+     ~2-column width as a large tile — so giving it the large tile's 5/4 ratio +
+     cover crop makes its height match the large images, faking it into the grid. */
+  .home-quote__img {
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+  }
 }

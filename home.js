@@ -32,7 +32,7 @@
       return;
     }
     if (item.block === "quote") {
-      frag.appendChild(buildQuoteBlock(item.text));
+      frag.appendChild(buildQuoteBlock(item));
       return;
     }
 
@@ -66,13 +66,48 @@
   // --- Pull quote ------------------------------------------------------------
 
   // A full-width studio statement, set at the hero text scale (see style.css).
-  function buildQuoteBlock(text) {
+  // With an `image` the block becomes a featured composition: a related image
+  // card beside the statement. That image is set manually in the order data
+  // (num/title/file), so it sits outside the auto card cadence.
+  function buildQuoteBlock(item) {
     var section = document.createElement("section");
     section.className = "home-quote";
+
+    // Text first so it takes the left column and the image sits to its right.
     var p = document.createElement("p");
     p.className = "home-quote__text";
-    p.textContent = text || "";
+    p.textContent = item.text || "";
     section.appendChild(p);
+
+    if (item.image) {
+      section.classList.add("home-quote--featured");
+      var figure = document.createElement("figure");
+      figure.className = "home-quote__card";
+
+      // Caption above the image, matching the other image cards.
+      if (item.imageTitle) {
+        var caption = document.createElement("figcaption");
+        caption.className = "home-quote__caption";
+        if (item.imageNum != null) {
+          var num = document.createElement("span");
+          num.className = "home-card__num";
+          num.textContent = item.imageNum;
+          caption.appendChild(num);
+          caption.appendChild(document.createTextNode(" "));
+        }
+        caption.appendChild(document.createTextNode(item.imageTitle));
+        figure.appendChild(caption);
+      }
+
+      var img = document.createElement("img");
+      img.className = "home-quote__img";
+      img.src = IMG_BASE + item.image;
+      img.alt = item.imageTitle || "";
+      figure.appendChild(img);
+
+      section.appendChild(figure);
+    }
+
     return section;
   }
 

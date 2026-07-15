@@ -964,3 +964,31 @@ site-jump { display: contents; }
 @media (min-width: 641px) {
   .home-quote__text { font-size: 3rem; }   /* 48px */
 }
+
+/* Featured quote: a manually-set related image card beside the statement (set via
+   an `image` on the quote entry in the order data). Full-width like the plain
+   quote, split into image | text; stacks on mobile. */
+.home-quote--featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--page-pad-x);
+  align-items: center;
+  padding: 0;                 /* drop the plain quote's 48px top/bottom padding */
+}
+.home-quote__card { margin: 0; }
+.home-quote__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.home-quote__caption {
+  margin: 0 0 8px;            /* caption sits above the image, like the cards */
+  font-size: 16px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: #000;
+}
+
+@media (max-width: 640px) {
+  .home-quote--featured { grid-template-columns: 1fr; row-gap: 24px; }
+}
