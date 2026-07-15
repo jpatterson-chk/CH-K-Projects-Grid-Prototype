@@ -152,8 +152,8 @@ window.RESEARCH_NODES = [
     tags: ["mixed-use", "tirana", "civic", "community", "highrise"],
   },
   {
-    file: "london-colosseum.webp",
-    title: "London Colosseum",
+    file: "london-bowl.webp",
+    title: "London Bowl",
     tags: ["cultural", "performance", "landmark", "adaptive-reuse", "highrise"],
   },
   {

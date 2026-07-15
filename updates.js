@@ -15,8 +15,8 @@ window.UPDATES = [
 // (in images/updates/) is the default image shown by featured-2 and the hover
 // target of its lead row.
 window.UPDATES_FEATURED = {
-  file: "london-colosseum.webp",
-  img: "london colosseum.webp",
-  title: "London Colosseum Unveiled",
+  file: "london-bowl.webp",
+  img: "london bowl.webp",
+  title: "London Bowl Unveiled",
   date: "17.06",
 };

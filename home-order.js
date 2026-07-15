@@ -5,7 +5,7 @@
 // same numbers used in the All Projects list).
 window.HOME_ORDER = [
   { num: 366, file: "jihlava-multipurpose-urban-arena.webp",   title: "Jihlava Multipurpose Urban Arena" },
-  { num: 571, file: "london-colosseum.webp",                   title: "London Colosseum" },
+  { num: 571, file: "london-bowl.webp",                        title: "London Bowl" },
   { num: 188, file: "lahofer-winery.webp",                     title: "Lahofer Winery" },
   { num: 416, file: "mendel-square.webp",                      title: "Mendel Square Reclaimed" },
   { num: 103, file: "waltrovka-masterplan.webp",               title: "Waltrovka 630-home Masterplan" },

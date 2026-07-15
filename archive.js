@@ -6,7 +6,9 @@
 (function () {
   var grid = document.getElementById("archive");
   if (!grid) return;
-  var images = window.PROJECT_IMAGES || [];
+  // A page can supply its own display order via window.ARCHIVE_ORDER (e.g.
+  // home-archive-order.js); otherwise fall back to the alphabetical manifest.
+  var images = window.ARCHIVE_ORDER || window.PROJECT_IMAGES || [];
 
   if (!images.length) {
     grid.innerHTML =
@@ -40,7 +42,7 @@
     "jihlava-multipurpose-urban-arena.webp": "366",
     "lahofer-winery.webp": "188",
     "learning-landscape-primary-school.webp": "518",
-    "london-colosseum.webp": "571",
+    "london-bowl.webp": "571",
     "manifesto-market.webp": "367",
     "mendel's-greenhouse.webp": "358",
     "mendel-square.webp": "416",

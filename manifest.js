@@ -12,7 +12,7 @@ window.PROJECT_IMAGES = [
   "jihlava-multipurpose-urban-arena.webp",
   "lahofer-winery.webp",
   "learning-landscape-primary-school.webp",
-  "london-colosseum.webp",
+  "london-bowl.webp",
   "manifesto-market.webp",
   "mendel's-greenhouse.webp",
   "mendel-square.webp",

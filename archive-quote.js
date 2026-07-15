@@ -15,7 +15,7 @@
 
   var QUOTE = "Transformative neighbourhoods, successful destinations, " +
               "inspiring places and spaces, future heritage, and humble\u00A0icons";
-  var INSERT_AFTER = 8;      // place the quote after this many cards (tweak to taste)
+  var INSERT_AFTER = 6;      // place the quote after this many cards (tweak to taste)
   var SIDE = "left";         // which grid edge the quote hugs: "left" or "right"
 
   var quote = document.createElement("blockquote");
