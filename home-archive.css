@@ -1,14 +1,32 @@
 /* =====================================================================
-   Homepage layout variant: CENTERED hero + PROJECTS archive (hybrid)
-   Loaded on home-archive.html next to style.css and home-centered.css.
-
-   This page reuses the projects-overview layout wholesale (.page, the
-   .module-archive grid, and the .project-list) and drops the centered hero
-   band (from home-centered.css) on top of it. The only thing this file adds
-   is removing the page's top padding so the hero fills the half-screen band
-   directly beneath the nav — the way it does on home-centered.html — instead
-   of starting lower down. The hero's own margin-bottom handles the gap down
-   to the grid.
+   Homepage layout variant: PROJECTS archive + pull quote
+   Loaded on home-archive.html next to style.css. Reuses the projects-overview
+   layout wholesale (.page, the .module-archive grid, and the .project-list) and
+   drops a pull-quote module into the archive grid. There is no hero.
    ===================================================================== */
 
-.page { padding-top: 0; }
+/* Let the image cards backfill around the multi-column pull quote so it never
+   leaves a ragged hole in the row it breaks into. (Only matters around the
+   quote — without it the auto-fill grid already fills every row.) */
+.module-archive {
+  grid-auto-flow: row dense;
+}
+
+/* Pull quote sitting inside the archive grid. Its column span is set responsively
+   in archive-quote.js — 4 columns on 7/8-column layouts, 3 on 5/6, full width on
+   4 or fewer — so it always lands on a tidy fraction of the row. Top-aligned so
+   its first line sits level with the tops of the images beside it, at a quiet
+   large-headline scale. */
+.archive-quote {
+  margin: 0;
+  align-self: start;
+}
+
+.archive-quote__text {
+  margin: 0;
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+}
