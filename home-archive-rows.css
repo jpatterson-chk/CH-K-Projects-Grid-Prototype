@@ -14,10 +14,10 @@
   /* Uniform gap, stepped up with the viewport so it reads evenly across screen
      sizes. justified-rows.js reads --jgap on each layout so its row-breaking math
      always matches what's rendered. Widescreen = 48px. */
-  --jgap: 16px;
+  --jgap: 48px;
 }
-@media (min-width: 641px)  { .jgallery { --jgap: 32px; } }
-@media (min-width: 1025px) { .jgallery { --jgap: 40px; } }
+@media (min-width: 641px)  { .jgallery { --jgap: 48px; } }
+@media (min-width: 1025px) { .jgallery { --jgap: 48px; } }
 @media (min-width: 1281px) { .jgallery { --jgap: 48px; } }
 @media (min-width: 1441px) { .jgallery { --jgap: 56px; } }
 
@@ -49,18 +49,20 @@
   width: 100%;
   height: 200px;
   object-fit: cover;         /* crop to the fixed height */
-  transition: opacity 0.2s ease;
 }
-.jcard:hover .jcard__img { opacity: 0.85; }
 
-/* Caption below the image — muted code + title, matching the grid cards. */
+/* Caption below the image — muted code + title, matching the grid cards.
+   Hover fades the whole caption to muted grey, like the other variants (the
+   image itself is unaffected). */
 .jcard__title {
   margin-top: 8px;
   font-size: 12px;
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: #000;
+  transition: color 0.2s ease;
 }
+.jcard:hover .jcard__title { color: var(--ck-muted); }
 .jcard__num { margin-right: 0.5em; color: var(--ck-muted); }
 
 /* Full-width pull-quote band between the two row groups. */
@@ -78,5 +80,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .jcard__img { transition: none; }
+  .jcard__title { transition: none; }
 }
