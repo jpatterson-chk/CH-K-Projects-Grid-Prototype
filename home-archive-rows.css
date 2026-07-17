@@ -1,0 +1,82 @@
+/* =====================================================================
+   Homepage layout variant: JUSTIFIED-ROWS archive gallery
+   Loaded on home-archive-rows.html next to style.css. Replaces the CSS-Grid
+   archive with justified rows (built by justified-rows.js): each row spans the
+   full width, every image is a fixed 200px tall (cropped via object-fit: cover),
+   gaps are uniform across all rows, and image widths vary by aspect ratio.
+
+   The JS groups images into rows and sets each figure's flex-grow to its aspect
+   ratio; flexbox then distributes width proportionally so the row fills exactly.
+   The trailing partial row is left at natural width, left-aligned.
+   ===================================================================== */
+
+.jgallery {
+  /* Uniform gap, stepped up with the viewport so it reads evenly across screen
+     sizes. justified-rows.js reads --jgap on each layout so its row-breaking math
+     always matches what's rendered. Widescreen = 48px. */
+  --jgap: 16px;
+}
+@media (min-width: 641px)  { .jgallery { --jgap: 32px; } }
+@media (min-width: 1025px) { .jgallery { --jgap: 40px; } }
+@media (min-width: 1281px) { .jgallery { --jgap: 48px; } }
+@media (min-width: 1441px) { .jgallery { --jgap: 56px; } }
+
+/* One justified row — a flex line the JS fills to the full width. */
+.jrow {
+  display: flex;
+  gap: var(--jgap);
+  margin-bottom: var(--jgap);
+  align-items: flex-start;   /* images top-aligned; captions sit below */
+}
+.jrow:last-child { margin-bottom: 0; }
+
+/* Trailing partial row: natural widths, left-aligned (no stretch). */
+.jrow--natural { justify-content: flex-start; }
+
+/* A tile. flex-basis 0 so the inline flex-grow (= aspect ratio) distributes the
+   width proportionally; min-width 0 lets the caption wrap instead of forcing the
+   figure wider (which would skew the proportions). */
+.jcard {
+  flex: 0 1 0;
+  min-width: 0;
+  margin: 0;
+}
+/* Natural row: no grow; the JS sets each figure's width = 200px * ratio. */
+.jrow--natural .jcard { flex: 0 0 auto; }
+
+.jcard__img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;         /* crop to the fixed height */
+  transition: opacity 0.2s ease;
+}
+.jcard:hover .jcard__img { opacity: 0.85; }
+
+/* Caption below the image — muted code + title, matching the grid cards. */
+.jcard__title {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: #000;
+}
+.jcard__num { margin-right: 0.5em; color: var(--ck-muted); }
+
+/* Full-width pull-quote band between the two row groups. */
+.jquote {
+  margin: 0 0 var(--jgap);
+  padding: 24px 0;
+}
+.jquote__text {
+  margin: 0;
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jcard__img { transition: none; }
+}
