@@ -18,10 +18,19 @@
   var gallery = document.getElementById("archive");
   if (!gallery) return;
 
-  var ROW_H = 200;                       // fixed image height (px)
+  var ROW_H = 250;                       // fixed image/row height (px); refreshed
+                                         // from the CSS --jrow-h on each layout()
   var GAP = 16;                          // uniform gap (px); refreshed from the CSS
                                          // --jgap (responsive) on each layout()
-  var QUOTE_AFTER = 8;                   // insert the quote band after this many images
+  var QUOTE_AFTER = 8;                   // place the quote tile after this many images
+  var QUOTE_W = 360;                     // quote tile width (px); refreshed from the
+                                         // CSS --jquote-w. Fixed width => the text
+                                         // re-wraps consistently and never rescales.
+  var MIN_SCALE = 0.8;                   // how narrow images may get before a row
+                                         // reflows: the smallest fraction of natural
+                                         // width they'll shrink to. Refreshed from
+                                         // the CSS --jrow-min-scale. Higher (->1) =
+                                         // reflow sooner, wider images, fewer per row.
   var QUOTE_TEXT = "Transformative neighbourhoods, successful destinations, " +
                    "inspiring places and spaces, future heritage, and humble icons";
 
@@ -43,6 +52,21 @@
   var items = images.map(function (file) {
     return { file: file, ratio: RATIOS[file] || 1, code: CODES[file], title: titleOf(file) };
   });
+
+  // Model the quote as a fixed-width item so it flows into a row like an image:
+  // row-breaking reserves its width, but unlike an image it does NOT stretch — the
+  // images in its row flex-grow to absorb the justification, so the quote keeps its
+  // width, its text re-wraps the same way every time, and the font never rescales.
+  // Placed after QUOTE_AFTER images.
+  if (QUOTE_AFTER > 0 && QUOTE_AFTER <= items.length) {
+    items.splice(QUOTE_AFTER, 0, { quote: true, text: QUOTE_TEXT });
+  }
+
+  // Natural (pre-justification) width of an item at the current row height: images
+  // scale by aspect ratio; the quote is a fixed width, capped to the container.
+  function natWidthOf(item) {
+    return item.quote ? Math.min(QUOTE_W, gallery.clientWidth) : ROW_H * item.ratio;
+  }
 
   // One image tile: <figure><img 200px cover><figcaption code + title></figure>.
   function buildFigure(item) {
@@ -69,16 +93,57 @@
     return fig;
   }
 
-  // Greedily group a list of items into rows that fill width W at height ROW_H.
-  // A row closes once the images' natural widths (ROW_H * ratio) plus the gaps
-  // reach W. Returns an array of rows (each an array of items).
+  // The quote tile: a fixed-width text box (width from CSS --jquote-w). It sits in a
+  // row like a card but never grows; the text wraps within that width at a constant
+  // font size, so nothing is clipped and the padding stays consistent.
+  function buildQuote(item) {
+    var tile = document.createElement("div");
+    tile.className = "jquote-tile";
+    var p = document.createElement("p");
+    p.className = "jquote-tile__text";
+    p.textContent = item.text;
+    tile.appendChild(p);
+    return tile;
+  }
+
+  // The factor by which a row's flexible (image) cells get scaled to fill W: the
+  // width left after the fixed cells (the quote) and the gaps, over the images'
+  // combined natural width. < 1 means the row shrinks its images below natural.
+  function flexScale(cells, W) {
+    var fixed = 0, flexNat = 0;
+    cells.forEach(function (c) {
+      if (c.quote) fixed += natWidthOf(c);
+      else flexNat += natWidthOf(c);
+    });
+    if (flexNat <= 0) return 1;           // nothing flexible to judge (quote-only)
+    return (W - fixed - (cells.length - 1) * GAP) / flexNat;
+  }
+
+  // Greedily group items into rows that fill width W at height ROW_H. A row closes
+  // once the cells' natural widths (ROW_H * ratio, or the quote's fixed width) plus
+  // the gaps reach W. But if that last cell would shrink the row's images below
+  // MIN_SCALE of their natural width, it's popped back to start the next row, so
+  // this row fills with fewer, slightly wider images instead of cramped ones.
+  // (This is also what lets the fixed-width quote reflow to the next row rather than
+  // squeezing the images beside it.) Returns an array of rows.
   function breakIntoRows(list, W) {
     var rows = [], row = [], natWidth = 0;
     list.forEach(function (item) {
       row.push(item);
-      natWidth += ROW_H * item.ratio;
+      natWidth += natWidthOf(item);
       var gaps = (row.length - 1) * GAP;
-      if (natWidth + gaps >= W) { rows.push(row); row = []; natWidth = 0; }
+      if (natWidth + gaps >= W) {
+        if (row.length > 1 && flexScale(row, W) < MIN_SCALE) {
+          row.pop();                      // too cramped — reflow this cell down
+          rows.push(row);
+          row = [item];
+          natWidth = natWidthOf(item);
+        } else {
+          rows.push(row);
+          row = [];
+          natWidth = 0;
+        }
+      }
     });
     if (row.length) rows.push(row);       // trailing partial row
     return rows;
@@ -90,6 +155,12 @@
     var el = document.createElement("div");
     el.className = "jrow" + (justified ? "" : " jrow--natural");
     row.forEach(function (item) {
+      if (item.quote) {
+        // Fixed-width, non-growing tile (width comes from CSS --jquote-w); the
+        // images in this row absorb the justification around it.
+        el.appendChild(buildQuote(item));
+        return;
+      }
       var fig = buildFigure(item);
       if (justified) {
         fig.style.flexGrow = item.ratio;   // proportional width; flex-basis:0 in CSS
@@ -102,44 +173,25 @@
     return el;
   }
 
-  function quoteBand() {
-    var band = document.createElement("section");
-    band.className = "jquote";
-    var p = document.createElement("p");
-    p.className = "jquote__text";
-    p.textContent = QUOTE_TEXT;
-    band.appendChild(p);
-    return band;
-  }
-
   function layout() {
     var W = gallery.clientWidth;
     if (!W) return;
 
-    // Refresh the gap from the CSS custom property (responsive per breakpoint) so
-    // the row-breaking math matches the rendered flex gap.
-    GAP = parseFloat(getComputedStyle(gallery).getPropertyValue("--jgap")) || GAP;
+    // Refresh the row height, gap, and quote width from the CSS custom properties
+    // (responsive per breakpoint) so the row-breaking math matches what's rendered.
+    var cs = getComputedStyle(gallery);
+    ROW_H = parseFloat(cs.getPropertyValue("--jrow-h")) || ROW_H;
+    GAP = parseFloat(cs.getPropertyValue("--jgap")) || GAP;
+    QUOTE_W = parseFloat(cs.getPropertyValue("--jquote-w")) || QUOTE_W;
+    MIN_SCALE = parseFloat(cs.getPropertyValue("--jrow-min-scale")) || MIN_SCALE;
 
     var rows = breakIntoRows(items, W);
-
-    // Place the quote band after the (full) row that reaches QUOTE_AFTER images —
-    // between two full rows, never after a lone stretched image. Skip if that
-    // would be the last row (nothing follows it).
-    var quoteAfterRow = -1;
-    if (QUOTE_AFTER > 0) {
-      for (var i = 0, count = 0; i < rows.length; i++) {
-        count += rows[i].length;
-        if (count >= QUOTE_AFTER) { quoteAfterRow = i; break; }
-      }
-      if (quoteAfterRow === rows.length - 1) quoteAfterRow = -1;
-    }
 
     var frag = document.createDocumentFragment();
     rows.forEach(function (row, ri) {
       // Only the gallery's trailing partial row is left natural (left-aligned).
       var isLastRow = ri === rows.length - 1;
       frag.appendChild(renderRow(row, !isLastRow));
-      if (ri === quoteAfterRow) frag.appendChild(quoteBand());
     });
 
     gallery.innerHTML = "";

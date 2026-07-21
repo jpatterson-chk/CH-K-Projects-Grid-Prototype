@@ -2,12 +2,14 @@
    Homepage layout variant: JUSTIFIED-ROWS archive gallery
    Loaded on home-archive-rows.html next to style.css. Replaces the CSS-Grid
    archive with justified rows (built by justified-rows.js): each row spans the
-   full width, every image is a fixed 200px tall (cropped via object-fit: cover),
-   gaps are uniform across all rows, and image widths vary by aspect ratio.
+   full width, every image is a fixed --jrow-h tall (cropped via object-fit:
+   cover), gaps are uniform across all rows, and image widths vary by aspect ratio.
 
    The JS groups images into rows and sets each figure's flex-grow to its aspect
    ratio; flexbox then distributes width proportionally so the row fills exactly.
-   The trailing partial row is left at natural width, left-aligned.
+   The pull-quote flows inline as a fixed-width text tile (--jquote-w): it takes a
+   slot in a row like a card but never stretches, so its text wraps at a constant
+   font size. The trailing partial row is left at natural width, left-aligned.
    ===================================================================== */
 
 .jgallery {
@@ -15,6 +17,18 @@
      sizes. justified-rows.js reads --jgap on each layout so its row-breaking math
      always matches what's rendered. Widescreen = 48px. */
   --jgap: 48px;
+  /* Fixed image + row height. justified-rows.js reads --jrow-h too, so its
+     row-breaking math stays in sync with the rendered height. */
+  --jrow-h: 250px;
+  /* Fixed width of the inline pull-quote tile. justified-rows.js reads --jquote-w
+     to reserve its slot when breaking rows. Manually set: the text wraps within
+     this width at a constant font size (no rescaling). */
+  --jquote-w: 600px;
+  /* How narrow images may get before a row reflows: the smallest fraction of their
+     natural width they'll shrink to. Read by justified-rows.js only (it's a
+     row-breaking knob, not a rendered style). Raise toward 1 to reflow sooner —
+     wider images, fewer per row; lower it to allow tighter, more-packed rows. */
+  --jrow-min-scale: 0.75;
 }
 @media (min-width: 641px)  { .jgallery { --jgap: 48px; } }
 @media (min-width: 1025px) { .jgallery { --jgap: 48px; } }
@@ -41,13 +55,13 @@
   min-width: 0;
   margin: 0;
 }
-/* Natural row: no grow; the JS sets each figure's width = 200px * ratio. */
+/* Natural row: no grow; the JS sets each figure's width = --jrow-h * ratio. */
 .jrow--natural .jcard { flex: 0 0 auto; }
 
 .jcard__img {
   display: block;
   width: 100%;
-  height: 200px;
+  height: var(--jrow-h);
   object-fit: cover;         /* crop to the fixed height */
 }
 
@@ -65,12 +79,17 @@
 .jcard:hover .jcard__title { color: var(--ck-muted); }
 .jcard__num { margin-right: 0.5em; color: var(--ck-muted); }
 
-/* Full-width pull-quote band between the two row groups. */
-.jquote {
-  margin: 0 0 var(--jgap);
-  padding: 24px 0;
+/* The pull-quote as an in-flow tile: a fixed-width text box (--jquote-w) that takes
+   a slot in a row like a card but never stretches — the images in its row flex-grow
+   to absorb the justification around it. The text wraps within the fixed width at a
+   constant font size (never rescaled, never clipped), and the tile is centred
+   against the taller image row. Capped to 100% so it can't exceed a narrow row. */
+.jquote-tile {
+  flex: 0 0 auto;
+  width: min(var(--jquote-w), 100%);
+  align-self: center;
 }
-.jquote__text {
+.jquote-tile__text {
   margin: 0;
   font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem);
   line-height: 1.2;
