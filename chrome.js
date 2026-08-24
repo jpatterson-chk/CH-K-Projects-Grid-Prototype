@@ -20,9 +20,9 @@
   function navHTML(reveal) {
     return `
       <header class="nav${reveal ? " nav--reveal-on-scroll" : ""}" id="nav">
-        <div class="nav__sizer" aria-hidden="true">CHYBIK + KRISTOF</div>
+        <div class="nav__sizer" aria-hidden="true">CHYBÍK + KRIŠTOF</div>
         <div class="nav__bar">
-          <p class="nav__text"><span class="nav__brand"><a class="nav__link">CHYBIK</a> <span class="m">+</span> <a class="nav__link">KRISTOF</a></span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;<a class="nav__link">ARCHITECTS</a> <span class="m">+</span> <span class="m">153</span>&nbsp;<a class="nav__link">CLIENTS</a> <span class="m">+</span> <span class="m">20</span>&nbsp;<a class="nav__link">COUNTRIES</a> <span class="m">=</span> <a class="nav__link" href="projects.html"><span class="m">608</span>&nbsp;PROJECTS</a><span class="m">;</span> <span class="m">16</span>&nbsp;<a class="nav__link">INSIGHTS</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">PRODUCT</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">BOOK</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">SEMESTERS</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">JOBS</a><span class="m">;</span> <span class="m">4</span>&nbsp;<a class="nav__link">OFFICES</a><span class="m">;</span> <span class="m">22</span>&nbsp;<a class="nav__link">UPDATES</a><span class="m">.</span></span></p>
+          <p class="nav__text"><span class="nav__brand"><a class="nav__link">CHYBÍK</a> <span class="m">+</span> <a class="nav__link">KRIŠTOF</a></span><span class="nav__tagline"> = ARCHITECTS</span><span class="nav__facts"> <span class="m">+</span> <span class="m">74</span>&nbsp;<a class="nav__link">ARCHITECTS</a> <span class="m">+</span> <span class="m">153</span>&nbsp;<a class="nav__link">CLIENTS</a> <span class="m">+</span> <span class="m">20</span>&nbsp;<a class="nav__link">COUNTRIES</a> <span class="m">=</span> <a class="nav__link" href="projects.html"><span class="m">608</span>&nbsp;PROJECTS</a><span class="m">;</span> <span class="m">16</span>&nbsp;<a class="nav__link">INSIGHTS</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">PRODUCT</a><span class="m">;</span> <span class="m">1</span>&nbsp;<a class="nav__link">BOOK</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">SEMESTERS</a><span class="m">;</span> <span class="m">3</span>&nbsp;<a class="nav__link">JOBS</a><span class="m">;</span> <span class="m">4</span>&nbsp;<a class="nav__link">OFFICES</a><span class="m">;</span> <span class="m">22</span>&nbsp;<a class="nav__link">UPDATES</a><span class="m">.</span></span></p>
 
           <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Toggle studio facts">
             <span class="nav__toggle-label">MENU</span>
@@ -41,7 +41,7 @@
     <footer class="footer">
       <div class="footer__grid footer__main">
         <div class="footer__brand">
-          <h2 class="footer__heading">CHYBIK + KRISTOF</h2>
+          <h2 class="footer__heading">CHYBÍK + KRIŠTOF</h2>
           <ul class="footer__links">
             <li><a>Instagram</a></li>
             <li><a>Facebook</a></li>
@@ -85,7 +85,7 @@
       </div>
 
       <div class="footer__grid footer__bottom">
-        <p class="footer__copy">© CHYBIK + KRISTOF 2026</p>
+        <p class="footer__copy">© CHYBÍK + KRIŠTOF 2026</p>
         <a class="footer__privacy">Privacy Policy</a>
         <a class="footer__top" href="#top">Back to top<svg class="footer__top-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="1"/><polygon points="5.64 13.89 6.36 14.59 11.5 9.24 11.5 21 12.5 21 12.5 9.24 17.64 14.59 18.36 13.89 12 7.28 5.64 13.89"/></svg></a>
       </div>
