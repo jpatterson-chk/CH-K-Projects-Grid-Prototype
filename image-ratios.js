@@ -10,7 +10,7 @@ window.IMAGE_RATIOS = {
   "forestry-HQ.webp": 0.8333,
   "gallery-of-furniture.webp": 0.8566,
   "house-of-wine-tasting.webp": 0.9065,
-  "jihlava-multipurpose-urban-arena.webp": 0.7893,
+  "jihlava-multipurpose-urban-arena.webp": 1.4998,
   "lahofer-winery.webp": 1.5000,
   "learning-landscape-primary-school.webp": 0.6500,
   "london-bowl.webp": 1.5000,
