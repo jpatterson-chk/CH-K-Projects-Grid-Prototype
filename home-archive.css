@@ -16,7 +16,7 @@
 .module-archive {
   grid-auto-flow: row dense;
   --card-min: 130px;
-  --archive-row-gap: 72px;   /* shared grid uses 96px */
+  --archive-row-gap: 64px;   /* shared grid uses 96px */
 }
 @media (min-width: 623px) { .module-archive { --card-min: 160px; } }
 @media (min-width: 701px) { .module-archive { --card-min: 200px; } }
