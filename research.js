@@ -31,7 +31,7 @@
       .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
-      .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      .replace(/(^|\s)(\w)/g, function (m, pre, c) { return pre + c.toUpperCase(); });
   }
 
   var nodes = data.map(function (d) {

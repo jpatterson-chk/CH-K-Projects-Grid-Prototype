@@ -38,13 +38,14 @@
   };
 
   // Derive a display title from an image filename (drop extension, dashes/
-  // underscores -> spaces, Title Case).
+  // underscores -> spaces, Title Case). Capitalises only at the start of a word,
+  // not after an apostrophe — \b\w would give "Mendel'S Greenhouse".
   window.titleFromArchiveFilename = function (name) {
     return name
       .replace(/\.[^.]+$/, "")
       .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
-      .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      .replace(/(^|\s)(\w)/g, function (m, pre, c) { return pre + c.toUpperCase(); });
   };
 })();
