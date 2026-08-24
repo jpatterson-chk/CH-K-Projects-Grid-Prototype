@@ -19,14 +19,14 @@
     {
       text: "Transformative neighbourhoods, successful destinations, " +
             "inspiring places and spaces, future heritage, and humble icons",
-      after: 6,
+      after: 5,
       side: "left",
     },
     {
       // PLACEHOLDER — awaiting final copy.
       text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
             "Aenean commodo ligula eget dolor. Aenean massa.",
-      after: 20,
+      after: 15,
       side: "right",
     },
   ];

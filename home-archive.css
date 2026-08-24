@@ -5,16 +5,18 @@
    drops a pull-quote module into the archive grid. There is no hero.
    ===================================================================== */
 
-/* Card sizing — the ONLY grid override on this page. Bigger cards than the
+/* Grid overrides on this page — cards, row gap, flow. Bigger cards than the
    shared archive grid, so a ~1440px laptop shows 5 columns, not 6. Column count
-   still comes from auto-fill and the gap clamp is untouched (style.css); these
-   three steps just keep the count falling 5 > 4 > 3 > 2 without doubling back.
+   still comes from auto-fill and the column-gap clamp is untouched (style.css);
+   these three steps just keep the count falling 5 > 4 > 3 > 2 without doubling
+   back.
      >= 701px   200px    <= 700px   160px    <= 622px   130px
-   Also: dense flow lets cards backfill around the multi-column pull quote so it
-   leaves no ragged hole in the row it breaks into. */
+   Dense flow lets cards backfill around the multi-column pull quotes so they
+   leave no ragged hole in the row they break into. */
 .module-archive {
   grid-auto-flow: row dense;
   --card-min: 130px;
+  --archive-row-gap: 72px;   /* shared grid uses 96px */
 }
 @media (min-width: 623px) { .module-archive { --card-min: 160px; } }
 @media (min-width: 701px) { .module-archive { --card-min: 200px; } }
