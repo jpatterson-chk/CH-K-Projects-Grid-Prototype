@@ -17,8 +17,8 @@
   // quote; `side` = which grid edge it hugs ("left" or "right").
   var QUOTES = [
     {
-      text: "Transformative neighbourhoods, successful destinations, " +
-            "inspiring places and spaces, future heritage, and humble icons",
+      text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
+            "Aenean commodo ligula eget dolor. Aenean massa.",
       after: 5,
       side: "left",
     },
