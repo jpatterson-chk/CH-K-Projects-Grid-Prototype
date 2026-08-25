@@ -4,7 +4,7 @@ window.PROJECT_IMAGES = [
   "KVIFF-TV-pavilion.webp",
   "ODA-tirana-meeting-hub.webp",
   "OUT-HABIT-dialogues.webp",
-  "Rákosrendező-Budapest-Masterplan.webp",
+  "Rákosrendező-Budapest-Masterplan.webp",
   "broadway-adaptive-tower.webp",
   "czech-pavilion-expo-2015.webp",
   "forestry-HQ.webp",

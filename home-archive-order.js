@@ -13,7 +13,7 @@ window.ARCHIVE_ORDER = [
   "gallery-of-furniture.webp",               // 170 Gallery of Furniture
   "forestry-HQ.webp",                        // 249 Forestry HQ
   "mendel's-greenhouse.webp",                // 358 Mendel Greenhouse
-  "zvonarka-bus-station.webp",               // 275 Zvonarka Bus Station — P
+  "zvonarka-bus-station.webp",               // 275 Zvonarka Bus Station — L
   "nusle-brewery-quarter.webp",              // 272 Nusle Brewery — L
   "vernacular-school-in-mulbekh.webp",       // 338 Vernacular School in Mulbekh — S
   "waltrovka-masterplan.webp",               // 103 Waltrovka — L
@@ -33,7 +33,7 @@ window.ARCHIVE_ORDER = [
   "manifesto-market.webp",                   // 367 Manifesto Market — P
   "pearl-gallery-and-community-centre.webp", // 479 Pearl Gallery and Community Centre — L
   "modular-office-and-research-centre.webp", // 360 Modular Office and Research Centre — P
-  "Rákosrendező-Budapest-Masterplan.webp",   // 606 Rákosrendező Budapest Masterplan — L
+  "Rákosrendező-Budapest-Masterplan.webp",   // 606 Rákosrendező Budapest Masterplan — L
   "moravska-trebova-cultural-centre.webp",   // 477 Moravska Trebova Cultural Centre — P
   "prague-main-train-station.webp",          // 487 Prague Brutalist Main Train Station — L
   "multifunctional-tower-tirana.webp",       // 534 Multifunctional Tower Tirana — P

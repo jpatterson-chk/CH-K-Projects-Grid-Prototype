@@ -35,7 +35,7 @@
     "vltava-philharmonic-hall.webp": "453",
     "waltrovka-masterplan.webp": "103",
     "zvonarka-bus-station.webp": "275",
-    "Rákosrendező-Budapest-Masterplan.webp": "606",
+    "Rákosrendező-Budapest-Masterplan.webp": "606",
     "sugar-factory-neighbourhood.webp": "263",
   };
 

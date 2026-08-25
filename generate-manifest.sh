@@ -14,10 +14,13 @@ cd "$(dirname "$0")"
   echo "// Lists the image files in ./images/ that the grid renders as cards."
   echo "window.PROJECT_IMAGES = ["
   # Common web image types, case-insensitive, sorted, basename only.
+  # iconv recomposes accented names to NFC to match what git stores; macOS
+  # hands back NFD, which a Linux host would 404 on.
   find images -maxdepth 1 -type f \
     \( -iname '*.svg' -o -iname '*.jpg' -o -iname '*.jpeg' \
        -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.avif' \) \
     -exec basename {} \; \
+    | iconv -f UTF-8-MAC -t UTF-8 \
     | LC_ALL=C sort \
     | sed 's/.*/  "&",/'
   echo "];"

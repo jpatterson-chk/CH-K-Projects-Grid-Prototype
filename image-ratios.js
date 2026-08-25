@@ -5,7 +5,7 @@ window.IMAGE_RATIOS = {
   "KVIFF-TV-pavilion.webp": 0.8566,
   "ODA-tirana-meeting-hub.webp": 1.4001,
   "OUT-HABIT-dialogues.webp": 0.8574,
-  "Rákosrendező-Budapest-Masterplan.webp": 1.5000,
+  "Rákosrendező-Budapest-Masterplan.webp": 1.5000,
   "broadway-adaptive-tower.webp": 0.7500,
   "czech-pavilion-expo-2015.webp": 0.8566,
   "forestry-HQ.webp": 0.8333,

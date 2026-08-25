@@ -16,9 +16,13 @@ cd "$(dirname "$0")"
   echo "// Maps each ./images/ file to its width/height aspect ratio, for the"
   echo "// justified-rows gallery (justified-rows.js)."
   echo "window.IMAGE_RATIOS = {"
+  # iconv recomposes accented names to NFC to match what git stores; macOS
+  # hands back NFD, which a Linux host would 404 on. sips still opens the
+  # recomposed path fine — APFS resolves either form.
   find images -maxdepth 1 -type f \
     \( -iname '*.svg' -o -iname '*.jpg' -o -iname '*.jpeg' \
        -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.avif' \) \
+    | iconv -f UTF-8-MAC -t UTF-8 \
     | LC_ALL=C sort \
     | while IFS= read -r f; do
         base=$(basename "$f")
