@@ -6,7 +6,7 @@
 // reordering). Reorder the lines to reorder the grid.
 window.ARCHIVE_ORDER = [
   // --- Curated lead (first 8) ---
-  "jihlava-multipurpose-urban-arena.webp",   // 366 Jihlava Arena
+  "jihlava-municipal-arena.webp",            // 366 Jihlava Arena
   "lahofer-winery.webp",                     // 188 Lahofer Winery
   "house-of-wine-tasting.webp",              // 225 House of Wine Tasting
   "london-bowl.webp",                        // 571 London Bowl

@@ -157,8 +157,8 @@ window.RESEARCH_NODES = [
     tags: ["cultural", "performance", "landmark", "adaptive-reuse", "highrise"],
   },
   {
-    file: "jihlava-multipurpose-urban-arena.webp",
-    title: "Jihlava Multipurpose Urban Arena",
+    file: "jihlava-municipal-arena.webp",
+    title: "Jihlava Municipal Arena",
     tags: ["sports", "arena", "public-space", "civic", "large-scale"],
   },
   {

@@ -13,7 +13,7 @@
     "forestry-HQ.webp": "249",
     "gallery-of-furniture.webp": "170",
     "house-of-wine-tasting.webp": "225",
-    "jihlava-multipurpose-urban-arena.webp": "366",
+    "jihlava-municipal-arena.webp": "366",
     "lahofer-winery.webp": "188",
     "learning-landscape-primary-school.webp": "518",
     "london-bowl.webp": "571",

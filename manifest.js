@@ -10,7 +10,7 @@ window.PROJECT_IMAGES = [
   "forestry-HQ.webp",
   "gallery-of-furniture.webp",
   "house-of-wine-tasting.webp",
-  "jihlava-multipurpose-urban-arena.webp",
+  "jihlava-municipal-arena.webp",
   "lahofer-winery.webp",
   "learning-landscape-primary-school.webp",
   "london-bowl.webp",
