@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>CHYBÍK + KRIŠTOF — Archive (Kijonka)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home-archive-kijonka.css">
+  <script src="chrome.js"></script>
+</head>
+<body id="top">
+  <site-nav></site-nav>
+
+  <main class="page">
+    <!-- Projects overview format (archive grid + project list), with pull-quote
+         modules dropped into the grid — inserted and sized by archive-quote.js. -->
+    <section class="module-archive" id="archive" aria-label="Projects"></section>
+
+    <section class="project-list" id="projects" aria-label="Project list">
+      <header class="project-list__head">
+        <h2 class="project-list__title">Projects</h2>
+        <div class="project-list__labels" aria-hidden="true">
+          <span>City</span><span>Category</span><span>Status</span><span>Year</span>
+        </div>
+      </header>
+      <div class="project-list__rows" id="projectRows"></div>
+      <button class="project-list__more" id="projectMore" type="button">View More +</button>
+    </section>
+  </main>
+
+  <site-footer></site-footer>
+
+  <!-- Jump menu uses same-page anchors (no base); label tracks the section. -->
+  <site-jump label="Selected Projects"></site-jump>
+
+  <!-- Generated list of filenames in ./images/ (see generate-manifest.sh), then
+       this page's custom display order (overrides the alphabetical manifest),
+       then the shared archive-grid renderer. This variant has no pull-quote
+       modules — the grid holds images only. -->
+  <script src="manifest.js"></script>
+  <script src="home-archive-kijonka-order.js"></script>
+  <script src="archive-data.js"></script>
+  <script src="archive.js"></script>
+
+  <!-- Project-list data + its shared renderer. -->
+  <script src="projects.js"></script>
+  <script src="project-list.js"></script>
+
+  <!-- Shared nav toggle + jump-menu label behaviour. -->
+  <script src="site.js"></script>
+</body>
+</html>
