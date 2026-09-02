@@ -7,38 +7,71 @@
 //
 // Each title leads with the project name on its own line, then the sentence
 // below: the "\n" is rendered as a line break by `white-space: pre-line` on
-// .archive-card__title (home-archive-kijonka-ratios.css).
+// .archive-card__title (home-archive-kijonka-ratios.css). Entries are in the
+// grid's display order (home-archive-kijonka-ratios-order.js).
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
     "Jihlava Municipal Arena\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "lahofer-winery.webp":
+    "Lahofer Winery\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "house-of-wine-tasting.webp":
     "House of Wine Tasting\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "london-bowl.webp":
+    "London Bowl\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+  "gallery-of-furniture.webp":
+    "Gallery of Furniture\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "forestry-HQ.webp":
     "Forestry HQ\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "mendel's-greenhouse.webp":
+    "Mendel's Greenhouse\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
   "zvonarka-bus-station.webp":
     "Zvonarka Bus Station\nA self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
   "nusle-brewery-quarter.webp":
     "Nusle Brewery Quarter\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
     "Vernacular School in Mulbekh\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "waltrovka-masterplan.webp":
+    "Waltrovka Masterplan\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua, quis nostrud exercitation.",
+  "mendel-square.webp":
+    "Mendel Square\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.",
   "KVIFF-TV-pavilion.webp":
     "KVIFF TV Pavilion\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "sugar-factory-neighbourhood.webp":
+    "Sugar Factory Neighbourhood\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
+  "OUT-HABIT-dialogues.webp":
+    "OUT HABIT Dialogues\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.",
   "ODA-tirana-meeting-hub.webp":
     "ODA Tirana Meeting Hub\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "broadway-adaptive-tower.webp":
+    "Broadway Adaptive Tower\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim.",
   "czech-pavilion-expo-2015.webp":
     "Czech Pavilion Expo 2015\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "learning-landscape-primary-school.webp":
     "Learning Landscape Primary School\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "manifesto-market.webp":
+    "Manifesto Market\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt labore.",
+  "pearl-gallery-and-community-centre.webp":
+    "Pearl Gallery and Community Centre\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
+  "modular-office-and-research-centre.webp":
+    "Modular Office and Research Centre\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.",
   "Rákosrendező-Budapest-Masterplan.webp":
     "Rákosrendező Budapest Masterplan\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "moravska-trebova-cultural-centre.webp":
     "Moravska Trebova Cultural Centre\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+  "prague-main-train-station.webp":
+    "Prague Main Train Station\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
   "multifunctional-tower-tirana.webp":
     "Multifunctional Tower Tirana\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "municipal-affordable-housing.webp":
     "Municipal Affordable Housing\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "vila-park-residences.webp":
+    "Vila Park Residences\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt magna.",
   "private-art-gallery.webp":
     "Private Art Gallery\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "slovak-pavilion-at-PQ-2019.webp":
+    "Slovak Pavilion at PQ 2019\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "urban-infill-apartment.webp":
     "Urban Infill Apartment\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "vltava-philharmonic-hall.webp":
+    "Vltava Philharmonic Hall\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
 };
