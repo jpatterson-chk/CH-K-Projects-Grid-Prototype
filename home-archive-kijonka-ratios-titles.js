@@ -4,37 +4,41 @@
 // touch projects.html or the other archive pages. Keys must match the filenames
 // in ./images/ (same keys as window.PROJECT_CODES in archive-data.js). Load
 // before archive.js.
+//
+// Each title leads with the project name on its own line, then the sentence
+// below: the "\n" is rendered as a line break by `white-space: pre-line` on
+// .archive-card__title (home-archive-kijonka-ratios.css).
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Jihlava Municipal Arena\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "house-of-wine-tasting.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "House of Wine Tasting\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "forestry-HQ.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Forestry HQ\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "zvonarka-bus-station.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Zvonarka Bus Station\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "nusle-brewery-quarter.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Nusle Brewery Quarter\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Vernacular School in Mulbekh\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "KVIFF-TV-pavilion.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "KVIFF TV Pavilion\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "ODA-tirana-meeting-hub.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "ODA Tirana Meeting Hub\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "czech-pavilion-expo-2015.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Czech Pavilion Expo 2015\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "learning-landscape-primary-school.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Learning Landscape Primary School\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "Rákosrendező-Budapest-Masterplan.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Rákosrendező Budapest Masterplan\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "moravska-trebova-cultural-centre.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+    "Moravska Trebova Cultural Centre\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
   "multifunctional-tower-tirana.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Multifunctional Tower Tirana\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "municipal-affordable-housing.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Municipal Affordable Housing\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "private-art-gallery.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Private Art Gallery\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "urban-infill-apartment.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Urban Infill Apartment\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
 };

@@ -6,35 +6,35 @@
 // before archive.js.
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Jihlava Municipal Arena Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "house-of-wine-tasting.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "House of Wine Tasting Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "forestry-HQ.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Forestry HQ Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "zvonarka-bus-station.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Zvonarka Bus Station Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "nusle-brewery-quarter.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Nusle Brewery Quarter Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Vernacular School in Mulbekh Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "KVIFF-TV-pavilion.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "KVIFF TV Pavilion Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "ODA-tirana-meeting-hub.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "ODA Tirana Meeting Hub Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "czech-pavilion-expo-2015.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Czech Pavilion Expo 2015 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "learning-landscape-primary-school.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Learning Landscape Primary School Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "Rákosrendező-Budapest-Masterplan.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Rákosrendező Budapest Masterplan Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "moravska-trebova-cultural-centre.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+    "Moravska Trebova Cultural Centre Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
   "multifunctional-tower-tirana.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Multifunctional Tower Tirana Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "municipal-affordable-housing.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Municipal Affordable Housing Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "private-art-gallery.webp":
-    "Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Private Art Gallery Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "urban-infill-apartment.webp":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Urban Infill Apartment Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
 };
