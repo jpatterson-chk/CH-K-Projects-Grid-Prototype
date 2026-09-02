@@ -16,7 +16,7 @@ window.ARCHIVE_TITLES = {
   "forestry-HQ.webp":
     "Forestry HQ\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "zvonarka-bus-station.webp":
-    "Zvonarka Bus Station\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Zvonarka Bus Station\nA self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
   "nusle-brewery-quarter.webp":
     "Nusle Brewery Quarter\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
