@@ -22,6 +22,14 @@
 @media (min-width: 623px) { .module-archive { --card-min: 160px; } }
 @media (min-width: 701px) { .module-archive { --card-min: 260px; } }
 
+/* Mobile: a single column. Override the auto-fill track list so phones show one
+   card per row (the 130px min would otherwise fit two). minmax(0, 1fr) — not a
+   bare 1fr — so the track can shrink to the container instead of the image's
+   intrinsic (min-content) width, which would overflow the viewport. */
+@media (max-width: 640px) {
+  .module-archive { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* Caption above the image (the shared card puts it below). The card markup is
    <img> then <figcaption>, so a reversed flex column stacks the caption on top;
    `gap` supplies the space between them, replacing the title's own margin. This
