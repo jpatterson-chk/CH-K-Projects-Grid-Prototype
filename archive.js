@@ -24,6 +24,11 @@
   // window.ARCHIVE_TITLES (e.g. home-archive-kijonka-titles.js); otherwise the
   // title is derived from the filename. Pages that don't set it are unaffected.
   var TITLE_OVERRIDES = window.ARCHIVE_TITLES || {};
+  // If a page loads the aspect-ratio map (image-ratios.js, w/h per file), tag
+  // each image is-landscape (ratio >= 1) or is-portrait (< 1) so the page CSS
+  // can crop it to a fixed ratio (e.g. home-archive-kijonka-ratios.html). Inert
+  // on pages that don't load the map or don't style those classes.
+  var IMAGE_RATIOS = window.IMAGE_RATIOS || {};
 
   var frag = document.createDocumentFragment();
 
@@ -38,6 +43,9 @@
     img.className = "archive-card__img";
     img.src = "images/" + file;
     img.alt = code ? code + " " + title : title;
+    if (IMAGE_RATIOS[file]) {
+      img.classList.add(IMAGE_RATIOS[file] >= 1 ? "is-landscape" : "is-portrait");
+    }
 
     var caption = document.createElement("figcaption");
     caption.className = "archive-card__title";

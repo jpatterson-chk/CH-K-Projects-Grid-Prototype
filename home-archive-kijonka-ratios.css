@@ -1,0 +1,74 @@
+/* =====================================================================
+   Homepage layout variant: PROJECTS archive (Kijonka, fixed ratios)
+   Loaded on home-archive-kijonka-ratios.html next to style.css. Identical to the
+   Kijonka variant except every image is cropped to one of two fixed aspect
+   ratios — 3:2 landscape or 4:5 portrait — chosen per image from its natural
+   orientation (archive.js tags each image is-landscape / is-portrait from
+   window.IMAGE_RATIOS). Images only, no pull-quote modules. There is no hero.
+   ===================================================================== */
+
+/* Grid overrides on this page — cards, row gap. Larger cards than the shared
+   archive grid so images read bigger: a ~1440px laptop shows 4 columns (~306px
+   images), holding 4 across common laptop widths (~1280–1512) and stepping down
+   to 3 by ~1100px and 2 by ~800px. Column count still comes from auto-fill and
+   the column-gap clamp is untouched (style.css); these steps set the min card
+   width per breakpoint.
+     >= 701px   260px    623-700px   160px    <= 622px   130px
+   Note: the jump to 260px at 701px reflows a 700px-wide tablet from 3 columns to
+   2 — an unavoidable side effect of hitting 4-at-1440 with a single desktop card
+   size while keeping phones at 2 columns and the existing breakpoints. */
+.module-archive {
+  --card-min: 130px;
+  --archive-row-gap: 64px;   /* shared grid uses 96px */
+}
+@media (min-width: 623px) { .module-archive { --card-min: 160px; } }
+@media (min-width: 701px) { .module-archive { --card-min: 260px; } }
+
+/* Caption above the image (the shared card puts it below). The card markup is
+   <img> then <figcaption>, so a reversed flex column stacks the caption on top;
+   `gap` supplies the space between them, replacing the title's own margin. This
+   is also the fallback if subgrid (below) is unsupported. */
+.archive-card {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+
+/* Bigger, quieter caption. 16px on desktop (up from the shared 12px). */
+.archive-card__title {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+/* Break the title onto its own line after the 3-digit project number. */
+.archive-card__num {
+  display: block;
+  margin-right: 0;
+}
+
+/* Row-aligned captions and images. Each card becomes a subgrid spanning two of
+   the archive grid's rows — a caption row and an image row — so the caption row
+   sizes to the TALLEST title in that visual row. The project numbers therefore
+   top-align across the row, the image tops line up beneath them, and shorter
+   titles simply leave whitespace below their text. row-gap here (caption↔image)
+   overrides the grid's inherited 64px row-gap, which still separates the rows. */
+@supports (grid-template-rows: subgrid) {
+  .archive-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    row-gap: 8px;
+    align-self: stretch;   /* fill both parent rows so the subgrid maps cleanly */
+  }
+  .archive-card__title { grid-row: 1; align-self: start; }
+  .archive-card__img   { grid-row: 2; align-self: start; }
+}
+
+/* Fixed image ratios. The image fills its column width (from style.css) and its
+   height comes from the aspect ratio; object-fit: cover crops the photo to fill
+   without distortion. archive.js sets .is-landscape / .is-portrait per image. */
+.archive-card__img {
+  object-fit: cover;
+}
+.archive-card__img.is-landscape { aspect-ratio: 3 / 2; }
+.archive-card__img.is-portrait  { aspect-ratio: 4 / 5; }
