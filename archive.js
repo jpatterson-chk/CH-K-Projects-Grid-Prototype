@@ -20,11 +20,15 @@
   // Title helper + code map are shared with justified-rows.js (archive-data.js).
   var titleFromFilename = window.titleFromArchiveFilename;
   var PROJECT_CODES = window.PROJECT_CODES || {};
+  // A page can override individual card titles by filename via
+  // window.ARCHIVE_TITLES (e.g. home-archive-kijonka-titles.js); otherwise the
+  // title is derived from the filename. Pages that don't set it are unaffected.
+  var TITLE_OVERRIDES = window.ARCHIVE_TITLES || {};
 
   var frag = document.createDocumentFragment();
 
   images.forEach(function (file) {
-    var title = titleFromFilename(file);
+    var title = TITLE_OVERRIDES[file] || titleFromFilename(file);
     var code = PROJECT_CODES[file];
 
     var card = document.createElement("figure");

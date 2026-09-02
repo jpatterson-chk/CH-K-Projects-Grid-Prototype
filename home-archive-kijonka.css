@@ -24,7 +24,8 @@
 
 /* Caption above the image (the shared card puts it below). The card markup is
    <img> then <figcaption>, so a reversed flex column stacks the caption on top;
-   `gap` supplies the space between them, replacing the title's own margin. */
+   `gap` supplies the space between them, replacing the title's own margin. This
+   is also the fallback if subgrid (below) is unsupported. */
 .archive-card {
   display: flex;
   flex-direction: column-reverse;
@@ -41,4 +42,22 @@
 .archive-card__num {
   display: block;
   margin-right: 0;
+}
+
+/* Row-aligned captions and images. Each card becomes a subgrid spanning two of
+   the archive grid's rows — a caption row and an image row — so the caption row
+   sizes to the TALLEST title in that visual row. The project numbers therefore
+   top-align across the row, the image tops line up beneath them, and shorter
+   titles simply leave whitespace below their text. row-gap here (caption↔image)
+   overrides the grid's inherited 64px row-gap, which still separates the rows. */
+@supports (grid-template-rows: subgrid) {
+  .archive-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    row-gap: 8px;
+    align-self: stretch;   /* fill both parent rows so the subgrid maps cleanly */
+  }
+  .archive-card__title { grid-row: 1; align-self: start; }
+  .archive-card__img   { grid-row: 2; align-self: start; }
 }
