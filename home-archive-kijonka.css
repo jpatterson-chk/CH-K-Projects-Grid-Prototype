@@ -44,6 +44,12 @@
   margin-right: 0;
 }
 
+/* "=" separators in the title, greyed like the project number (the studio's
+   "=" brand mark). archive.js wraps each "=" in this span. */
+.archive-card__sep {
+  color: var(--ck-muted);
+}
+
 /* Row-aligned captions and images. Each card becomes a subgrid spanning two of
    the archive grid's rows — a caption row and an image row — so the caption row
    sizes to the TALLEST title in that visual row. The project numbers therefore

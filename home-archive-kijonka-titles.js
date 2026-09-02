@@ -4,37 +4,74 @@
 // touch projects.html or the other archive pages. Keys must match the filenames
 // in ./images/ (same keys as window.PROJECT_CODES in archive-data.js). Load
 // before archive.js.
+//
+// Every title reads "Project Name = sentence." — the single "=" separator is the
+// studio's brand mark: archive.js wraps it in a span that home-archive-kijonka.css
+// greys like the project code. Entries are in the grid's display order
+// (home-archive-kijonka-order.js).
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
-    "Jihlava Municipal Arena. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Jihlava Municipal Arena = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "lahofer-winery.webp":
+    "Lahofer Winery = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "house-of-wine-tasting.webp":
-    "House of Wine Tasting. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "House of Wine Tasting = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "london-bowl.webp":
+    "London Bowl = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+  "gallery-of-furniture.webp":
+    "Gallery of Furniture = Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "forestry-HQ.webp":
-    "Forestry HQ. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Forestry HQ = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "mendel's-greenhouse.webp":
+    "Mendel's Greenhouse = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
   "zvonarka-bus-station.webp":
-    "Zvonarka Bus Station. A self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
+    "Zvonarka Bus Station = A self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
   "nusle-brewery-quarter.webp":
-    "Nusle Brewery Quarter. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Nusle Brewery Quarter = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
-    "Vernacular School in Mulbekh. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Vernacular School in Mulbekh = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "waltrovka-masterplan.webp":
+    "Waltrovka Masterplan = Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, quis nostrud exercitation.",
+  "mendel-square.webp":
+    "Mendel Square = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.",
   "KVIFF-TV-pavilion.webp":
-    "KVIFF TV Pavilion. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "KVIFF TV Pavilion = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "sugar-factory-neighbourhood.webp":
+    "Sugar Factory Neighbourhood = Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
+  "OUT-HABIT-dialogues.webp":
+    "OUT HABIT Dialogues = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.",
   "ODA-tirana-meeting-hub.webp":
-    "ODA Tirana Meeting Hub. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "ODA Tirana Meeting Hub = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "broadway-adaptive-tower.webp":
+    "Broadway Adaptive Tower = Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim.",
   "czech-pavilion-expo-2015.webp":
-    "Czech Pavilion Expo 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Czech Pavilion Expo 2015 = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "learning-landscape-primary-school.webp":
-    "Learning Landscape Primary School. Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Learning Landscape Primary School = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "manifesto-market.webp":
+    "Manifesto Market = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt labore.",
+  "pearl-gallery-and-community-centre.webp":
+    "Pearl Gallery and Community Centre = Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
+  "modular-office-and-research-centre.webp":
+    "Modular Office and Research Centre = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.",
   "Rákosrendező-Budapest-Masterplan.webp":
-    "Rákosrendező Budapest Masterplan. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Rákosrendező Budapest Masterplan = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "moravska-trebova-cultural-centre.webp":
-    "Moravska Trebova Cultural Centre. Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+    "Moravska Trebova Cultural Centre = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+  "prague-main-train-station.webp":
+    "Prague Main Train Station = Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
   "multifunctional-tower-tirana.webp":
-    "Multifunctional Tower Tirana. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Multifunctional Tower Tirana = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "municipal-affordable-housing.webp":
-    "Municipal Affordable Housing. Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Municipal Affordable Housing = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "vila-park-residences.webp":
+    "Vila Park Residences = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt magna.",
   "private-art-gallery.webp":
-    "Private Art Gallery. Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Private Art Gallery = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  "slovak-pavilion-at-PQ-2019.webp":
+    "Slovak Pavilion at PQ 2019 = Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "urban-infill-apartment.webp":
-    "Urban Infill Apartment. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Urban Infill Apartment = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "vltava-philharmonic-hall.webp":
+    "Vltava Philharmonic Hall = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
 };

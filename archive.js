@@ -57,7 +57,19 @@
       num.textContent = code;
       caption.appendChild(num);
     }
-    caption.appendChild(document.createTextNode(title));
+    // Render the title, wrapping any "=" separators in their own span so a page
+    // can grey them like the project code (the studio's "=" brand mark). The
+    // text around each "=" stays a plain text node, so titles never inject HTML.
+    // Titles with no "=" (most pages) get a single plain text node as before.
+    title.split("=").forEach(function (part, i) {
+      if (i > 0) {
+        var sep = document.createElement("span");
+        sep.className = "archive-card__sep";
+        sep.textContent = "=";
+        caption.appendChild(sep);
+      }
+      caption.appendChild(document.createTextNode(part));
+    });
 
     card.appendChild(img);
     card.appendChild(caption);
