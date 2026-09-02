@@ -32,6 +32,7 @@
     .variant {
       display: block;
       padding: 24px;
+      background: #fff;
       border: 1px solid #e0e0e0;
       color: #000;
       text-decoration: none;
@@ -40,6 +41,16 @@
     .variant:hover { border-color: #000; }
     .variant__name { font-size: 20px; }
     .variant__desc { margin-top: 6px; color: #808080; font-size: 14px; line-height: 1.4; }
+
+    .section-divider { margin: 48px 0 0; border: none; border-top: 1px solid #e0e0e0; }
+    .section-sub {
+      margin: 24px 0;
+      font-size: 12px;
+      font-weight: 400;
+      color: #808080;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
 
     .more { margin-top: 48px; font-size: 14px; }
     .more a { color: #808080; text-decoration: none; transition: color 0.2s ease; }
@@ -54,6 +65,24 @@
   <main class="wrap">
     <h1>Homepage variants</h1>
     <p class="sub">Hero layout configurations for the CHYBÍK + KRIŠTOF homepage prototype.</p>
+
+    <ul class="variants">
+      <li><a class="variant" href="home-archive.html">
+        <div class="variant__name">Centered hero + archive</div>
+        <div class="variant__desc">A hybrid of the centered hero band and the full projects overview page: the vertically-centred hero sits above the complete archive grid (with project codes) and the tabular “View More” project list, rather than the curated featured grid.</div>
+      </a></li>
+      <li><a class="variant" href="home-archive-kijonka.html">
+        <div class="variant__name">Centered hero + archive (Kijonka)</div>
+        <div class="variant__desc">A working copy of the centered hero + archive variant, set aside for the Kijonka round of updates.</div>
+      </a></li>
+      <li><a class="variant" href="home-archive-kijonka-ratios.html">
+        <div class="variant__name">Kijonka — fixed image ratios</div>
+        <div class="variant__desc">The Kijonka archive with every image cropped to one of two fixed aspect ratios — 3:2 landscape or 4:5 portrait — chosen from each image’s natural orientation.</div>
+      </a></li>
+    </ul>
+
+    <hr class="section-divider">
+    <h2 class="section-sub">Previous versions</h2>
 
     <ul class="variants">
       <li><a class="variant" href="home.html">
@@ -71,18 +100,6 @@
       <li><a class="variant" href="home-mosaic-2.html">
         <div class="variant__name">Mosaic grid — natural heights</div>
         <div class="variant__desc">A second take on the mosaic where images keep their natural, uncropped aspect ratios: the tile width sets the size and the height flows, top-aligned so any extra whitespace falls below. Large tiles alternate left/right for even distribution (the pull-quote row keeps its image on the right). Pairs the centered hero band with its own uncropped image set and the full text project list above the footer.</div>
-      </a></li>
-      <li><a class="variant" href="home-archive.html">
-        <div class="variant__name">Centered hero + archive</div>
-        <div class="variant__desc">A hybrid of the centered hero band and the full projects overview page: the vertically-centred hero sits above the complete archive grid (with project codes) and the tabular “View More” project list, rather than the curated featured grid.</div>
-      </a></li>
-      <li><a class="variant" href="home-archive-kijonka.html">
-        <div class="variant__name">Centered hero + archive (Kijonka)</div>
-        <div class="variant__desc">A working copy of the centered hero + archive variant, set aside for the Kijonka round of updates.</div>
-      </a></li>
-      <li><a class="variant" href="home-archive-kijonka-ratios.html">
-        <div class="variant__name">Kijonka — fixed image ratios</div>
-        <div class="variant__desc">The Kijonka archive with every image cropped to one of two fixed aspect ratios — 3:2 landscape or 4:5 portrait — chosen from each image’s natural orientation.</div>
       </a></li>
       <li><a class="variant" href="home-archive-rows.html">
         <div class="variant__name">Justified rows</div>
