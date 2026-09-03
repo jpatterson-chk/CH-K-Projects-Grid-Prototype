@@ -11,19 +11,19 @@
 // grid's display order (home-archive-kijonka-ratios-order.js).
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
-    "Jihlava Municipal Arena\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Jihlava Municipal Arena\nA porous urban campus opening multipurpose infrastructure to everyday public life and play.",
   "lahofer-winery.webp":
-    "Lahofer Winery\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Lahofer Winery\nA productive landscape extended into a public destination for culture, community and collective experience.",
   "house-of-wine-tasting.webp":
-    "House of Wine Tasting\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "House of Wine Tasting\nA contemporary wine space carved into the accumulated architectural layers of the city.",
   "london-bowl.webp":
-    "London Bowl\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    "London Bowl\nA hybrid venue reframed as part of the neighbourhood beyond the spectacle.",
   "gallery-of-furniture.webp":
-    "Gallery of Furniture\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Gallery of Furniture\nAn ordinary commercial shell transformed through the architectural reuse of an everyday product.",
   "forestry-HQ.webp":
-    "Forestry HQ\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Forestry HQ\nThe Czech Republic’s largest timber building, expanding into the forest, turning the workplace into a learning landscape.",
   "mendel's-greenhouse.webp":
-    "Mendel's Greenhouse\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+    "Mendel's Greenhouse\nScientific heritage reimagined as an open structure for learning, exchange and community life.",
   "zvonarka-bus-station.webp":
     "Zvonarka Bus Station\nA self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
   "nusle-brewery-quarter.webp":
