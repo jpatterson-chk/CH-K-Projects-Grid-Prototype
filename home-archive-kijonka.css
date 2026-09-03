@@ -40,22 +40,20 @@
   gap: 8px;
 }
 
-/* Bigger, quieter caption. 16px on desktop (up from the shared 12px). */
+/* Bigger, quieter caption. 16px on desktop (up from the shared 12px).
+   pre-line renders the "\n" in the title overrides (kijonka-titles.js) as a line
+   break, so the project name sits on its own line above the sentence, while the
+   sentence itself still wraps normally within the column. */
 .archive-card__title {
   margin-top: 0;
   font-size: 16px;
+  white-space: pre-line;
 }
 
 /* Break the title onto its own line after the 3-digit project number. */
 .archive-card__num {
   display: block;
   margin-right: 0;
-}
-
-/* "=" separators in the title, greyed like the project number (the studio's
-   "=" brand mark). archive.js wraps each "=" in this span. */
-.archive-card__sep {
-  color: var(--ck-muted);
 }
 
 /* Row-aligned captions and images. Each card becomes a subgrid spanning two of

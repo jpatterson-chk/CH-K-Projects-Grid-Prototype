@@ -5,73 +5,73 @@
 // in ./images/ (same keys as window.PROJECT_CODES in archive-data.js). Load
 // before archive.js.
 //
-// Every title reads "Project Name = sentence." — the single "=" separator is the
-// studio's brand mark: archive.js wraps it in a span that home-archive-kijonka.css
-// greys like the project code. Entries are in the grid's display order
-// (home-archive-kijonka-order.js).
+// Each title leads with the project name on its own line, then the sentence
+// below: the "\n" is rendered as a line break by `white-space: pre-line` on
+// .archive-card__title (home-archive-kijonka.css). Entries are in the grid's
+// display order (home-archive-kijonka-order.js).
 window.ARCHIVE_TITLES = {
   "jihlava-municipal-arena.webp":
-    "Jihlava Municipal Arena = A porous urban campus opening multipurpose infrastructure to everyday public life and play.",
+    "Jihlava Municipal Arena\nA porous urban campus opening multipurpose infrastructure to everyday public life and play.",
   "lahofer-winery.webp":
-    "Lahofer Winery = A productive landscape extended into a public destination for culture, community and collective experience.",
+    "Lahofer Winery\nA productive landscape extended into a public destination for culture, community and collective experience.",
   "house-of-wine-tasting.webp":
-    "House of Wine Tasting = A contemporary wine space carved into the accumulated architectural layers of the city.",
+    "House of Wine Tasting\nA contemporary wine space carved into the accumulated architectural layers of the city.",
   "london-bowl.webp":
-    "London Bowl = A hybrid venue reframed as part of the neighbourhood beyond the spectacle.",
+    "London Bowl\nA hybrid venue reframed as part of the neighbourhood beyond the spectacle.",
   "gallery-of-furniture.webp":
-    "Gallery of Furniture = An ordinary commercial shell transformed through the architectural reuse of an everyday product.",
+    "Gallery of Furniture\nAn ordinary commercial shell transformed through the architectural reuse of an everyday product.",
   "forestry-HQ.webp":
-    "Forestry HQ = The Czech Republic’s largest timber building, expanding into the forest, turning the workplace into a learning landscape.",
+    "Forestry HQ\nThe Czech Republic’s largest timber building, expanding into the forest, turning the workplace into a learning landscape.",
   "mendel's-greenhouse.webp":
-    "Mendel's Greenhouse = Scientific heritage reimagined as an open structure for learning, exchange and community life.",
+    "Mendel's Greenhouse\nScientific heritage reimagined as an open structure for learning, exchange and community life.",
   "zvonarka-bus-station.webp":
-    "Zvonarka Bus Station = A self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
+    "Zvonarka Bus Station\nA self-initiated transformation of Brutalist infrastructure into an open piece of the city.",
   "nusle-brewery-quarter.webp":
-    "Nusle Brewery Quarter = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Nusle Brewery Quarter\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vernacular-school-in-mulbekh.webp":
-    "Vernacular School in Mulbekh = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Vernacular School in Mulbekh\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "waltrovka-masterplan.webp":
-    "Waltrovka Masterplan = Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, quis nostrud exercitation.",
+    "Waltrovka Masterplan\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua, quis nostrud exercitation.",
   "mendel-square.webp":
-    "Mendel Square = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.",
+    "Mendel Square\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.",
   "KVIFF-TV-pavilion.webp":
-    "KVIFF TV Pavilion = Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "KVIFF TV Pavilion\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "sugar-factory-neighbourhood.webp":
-    "Sugar Factory Neighbourhood = Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
+    "Sugar Factory Neighbourhood\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
   "OUT-HABIT-dialogues.webp":
-    "OUT HABIT Dialogues = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.",
+    "OUT HABIT Dialogues\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.",
   "ODA-tirana-meeting-hub.webp":
-    "ODA Tirana Meeting Hub = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "ODA Tirana Meeting Hub\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "broadway-adaptive-tower.webp":
-    "Broadway Adaptive Tower = Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim.",
+    "Broadway Adaptive Tower\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim.",
   "czech-pavilion-expo-2015.webp":
-    "Czech Pavilion Expo 2015 = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Czech Pavilion Expo 2015\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "learning-landscape-primary-school.webp":
-    "Learning Landscape Primary School = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Learning Landscape Primary School\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "manifesto-market.webp":
-    "Manifesto Market = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt labore.",
+    "Manifesto Market\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt labore.",
   "pearl-gallery-and-community-centre.webp":
-    "Pearl Gallery and Community Centre = Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
+    "Pearl Gallery and Community Centre\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
   "modular-office-and-research-centre.webp":
-    "Modular Office and Research Centre = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.",
+    "Modular Office and Research Centre\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.",
   "Rákosrendező-Budapest-Masterplan.webp":
-    "Rákosrendező Budapest Masterplan = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Rákosrendező Budapest Masterplan\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "moravska-trebova-cultural-centre.webp":
-    "Moravska Trebova Cultural Centre = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
+    "Moravska Trebova Cultural Centre\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor.",
   "prague-main-train-station.webp":
-    "Prague Main Train Station = Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
+    "Prague Main Train Station\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
   "multifunctional-tower-tirana.webp":
-    "Multifunctional Tower Tirana = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Multifunctional Tower Tirana\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "municipal-affordable-housing.webp":
-    "Municipal Affordable Housing = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Municipal Affordable Housing\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "vila-park-residences.webp":
-    "Vila Park Residences = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt magna.",
+    "Vila Park Residences\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt magna.",
   "private-art-gallery.webp":
-    "Private Art Gallery = Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+    "Private Art Gallery\nLorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
   "slovak-pavilion-at-PQ-2019.webp":
-    "Slovak Pavilion at PQ 2019 = Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Slovak Pavilion at PQ 2019\nConsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "urban-infill-apartment.webp":
-    "Urban Infill Apartment = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Urban Infill Apartment\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "vltava-philharmonic-hall.webp":
-    "Vltava Philharmonic Hall = Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+    "Vltava Philharmonic Hall\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
 };
